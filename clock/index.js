@@ -1,8 +1,8 @@
 var canvas = document.getElementById("canvas");
-canvas.height = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
-canvas.width = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-canvas.height = window.innerHeight
-canvas.width = window.innerWidth
+// canvas.height = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+// canvas.width = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+// canvas.height = window.innerHeight
+// canvas.width = window.innerWidth
 canvas.height = document.documentElement.clientHeight
 canvas.width = document.documentElement.clientWidth
 var ctx = canvas.getContext('2d');
