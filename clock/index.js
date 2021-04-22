@@ -6,7 +6,7 @@ var canvas = document.getElementById("canvas");
 canvas.height = document.documentElement.clientHeight
 canvas.width = document.documentElement.clientWidth
 var ctx = canvas.getContext('2d');
-
+audio_ctrl = document.getElementById("ticktock")
 class Clock {
 
     constructor(x, y, radius) {
@@ -52,6 +52,17 @@ class Clock {
             ctx.translate(-this.x, -this.y)
         })
     }
+    audio() {
+        var audio_file = audio_ctrl.src.substr(audio_ctrl.src.lastIndexOf('/')+1)
+        console.log(audio_file)
+        if (audio_file == "tock.mp3") {
+            audio_file = "tick.mp3"
+        } else {
+            audio_file = "tock.mp3"
+        }
+        audio_ctrl.src = audio_file
+        audio_ctrl.play()
+    }
 
 }
 class Clock_hands {
@@ -76,6 +87,7 @@ class Renderer {
     }
 
     update() {
+        this.clock.audio()
         this.clock.calc_angles()
         this.clock.draw()
 

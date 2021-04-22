@@ -8,9 +8,10 @@ var sprites = new Array(8)
 var xPos = 0, yPos = canvas.height/2
 var sprite_index = 0
 var my_image = new Image()
-my_image.src = "sprites/first.png"      //to get width and height, no other use
+my_image.src = "first.png"      //to get width and height, no other use
 var sprite_height
 var sprite_width
+var number_of_frames = 0
 my_image.onload = () => {    
     sprite_width = my_image.width *2
     sprite_height = my_image.height * 2
@@ -38,14 +39,20 @@ function render() {
     ctx.drawImage(sprites[Math.floor(sprite_index) % 8],xPos,yPos,sprite_width,sprite_height)
 }
 function update() {
+    number_of_frames += 1
     render()
-    xPos = xPos + 4
+    xPos = xPos + 5
     if (xPos >= canvas.width) {
         xPos = 0
     }
     
-    sprite_index = sprite_index + 0.04
+    sprite_index = sprite_index + 0.02
     
 }
-
-setInterval(update,16.67)
+function showFPS() {
+    display = document.getElementById("fps_counter")
+    display.innerHTML = number_of_frames + " fps"
+    number_of_frames = 0
+}
+setInterval(update, 16.666667)
+setInterval(showFPS,1000)
