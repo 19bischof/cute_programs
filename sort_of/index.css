@@ -1,0 +1,15 @@
+html{
+    overflow:hidden;
+}
+
+*{
+    background-color:rgb(69, 109, 155)
+}
+span{
+    position:absolute;
+    height:20px;
+    width:240px
+}
+#span2{
+    top:30px
+}
