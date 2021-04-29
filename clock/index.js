@@ -23,10 +23,11 @@ class Clock {
     }
 
     calc_angles() {
+
         this.date = new Date()
         this.seconds.angle = this.date.getSeconds() / 60 * 2 * Math.PI
         this.minutes.angle = this.date.getMinutes() / 60 * 2 * Math.PI
-        this.hours.angle = this.date.getHours() / 12 * 2 * Math.PI + this.minutes.angle / 12 //for continuous motin on hour hand
+        this.hours.angle = this.date.getHours() / 12 * 2 * Math.PI + this.minutes.angle / 12 + this.seconds.angle /(60*12) //for continuous motion on hour hand
 
         // because hands are at 12:00 at 3:00
         this.seconds.angle = this.seconds.angle - Math.PI / 2
