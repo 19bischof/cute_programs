@@ -5,7 +5,7 @@ import random
 #ball[] gives first x then y of the middle of the sphere
 pygame.init()
 screen_height = 500
-screen_width = 500
+screen_width = 1000
 ship_width = 50
 ship_height = 50
 ball_radius = 20
@@ -19,8 +19,8 @@ frame_count = 0
 list_of_colors = [(239,7,73),(224,93,244),(93,216,244),(93,244,133),(222,244,93),(242,114,29)]
 color_id = 0
 # pygame.draw.circle(screen, (0,0,255),(250,250),75)
-screen = pygame.display.set_mode([screen_height, screen_width])
-pygame.display.set_caption('Alien_invasion')
+screen = pygame.display.set_mode([screen_width, screen_height])
+pygame.display.set_caption('Alien Invasion')
 shipx = 0
 shipy = screen_height - ship_height - 2
 shipv = 0
