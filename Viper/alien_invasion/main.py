@@ -42,9 +42,9 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                shipv=-2
+                shipv=-3
             if event.key == pygame.K_RIGHT:
-                shipv= 2
+                shipv= 3
             if event.key == pygame.K_SPACE:
                 space_pressed = True
 
