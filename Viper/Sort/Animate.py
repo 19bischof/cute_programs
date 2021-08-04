@@ -18,28 +18,37 @@ class Animate:
         Window.update()
     def start():    
         selection = ""    
-        while selection not in ["1","1)","Bubblesort","2","2)","Insertion-sort","Insertionsort","Insertion_sort"]:
+        while selection not in ["1","1)","Bubblesort","Bubble-sort","Bubble_sort","2","2)","Insertion-sort","Insertionsort","Insertion_sort","3","3)","Shakersort","Shaker_sort","Shaker-sort"]:
             print("What sorting algorithm do you want to see?")
             print("1) Bubblesort")
-            print("2) Insertion-sort")
+            print("2) Insertionsort")
+            print("3) Shakersort")
             selection = input()
         print("Press Space to start and to pause!")
-        if selection in ["1","1)","Bubblesort"]:
+        if selection in ["1","1)","Bubblesort","Bubble-sort","Bubble_sort"]:
             Animate.Bubblesort()
-        else:
-            Animate.Insertion_sort()
+        if selection in ["2","2)","Insertion-sort","Insertionsort","Insertion_sort"]:
+            Animate.Insertionsort()
+        if selection in ["3","3)","Shakersort","Shaker_sort","Shaker-sort"]:
+            Animate.Shakersort()
     def Bubblesort():
         Window("Bubblesort")
         for l,i in List().Bubblesort_step_by_step():
             Window.check_events()
             Animate.render(l,vip=[i])
             pygame.time.delay(int(200/st.length))
-    def Insertion_sort():
-        Window("Insertion-Sort")
-        for l,i,ii in List().Insertion_sort_step_by_step():
+    def Insertionsort():
+        Window("Insertionsort")
+        for l,i in List().Insertionsort_step_by_step():
             Window.check_events()
-            Animate.render(l,vip=[i,ii])
-            pygame.time.delay(int(10000/st.length))
+            Animate.render(l,vip=[i])
+            pygame.time.delay(int(5000/st.length))
+    def Shakersort():
+        Window("Shakersort")
+        for l,i in List().Shakersort_step_by_step():
+            Window.check_events()
+            Animate.render(l,vip=[i])
+            pygame.time.delay(int(100*2/st.length))
 Animate.start()
 pygame.quit()
 print("Done")
