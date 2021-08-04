@@ -20,7 +20,7 @@ class Conni:
     
     def game_loop():
         while(Conni.running):
-            Conni.register_events()            
+            Conni.check_events()            
             Conni.draw()
             Conni.motion()
             Conni.generate()
@@ -30,7 +30,7 @@ class Conni:
             Conni.frames += 1
         pygame.quit()
         print("Score: ",int(Conni.frames/501))
-    def register_events():
+    def check_events():
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
