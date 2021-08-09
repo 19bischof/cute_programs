@@ -48,8 +48,6 @@ class List:
                 if l[k-1] > l[k]:
                     l[k-1],l[k] = l[k],l[k-1]
                     yield l,k-1
-        half = int(len(l)/2)
-        l[half],l[half+1] = l[half+1],l[half]
         for ii in List.check_sorted(l):
             yield l,ii
     def check_sorted(l):
