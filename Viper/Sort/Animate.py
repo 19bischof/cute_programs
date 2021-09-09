@@ -27,12 +27,14 @@ class Animate:
         Insertionsort_set = ["2","2)","insertion-sort","insertionsort","insertion_sort"]
         Shakersort_set = ["3","3)","shakersort","shaker_sort","shaker-sort"]
         Quicksort_set = ["4","4)","quicksort","quick_sort","quick-sort"]
-        while selection not in Bubblesort_set + Insertionsort_set + Shakersort_set + Quicksort_set:
+        Selectionsort_set = ["5","5)","selectionsort","selection_sort","selection-sort"]
+        while selection not in Bubblesort_set + Insertionsort_set + Shakersort_set + Quicksort_set + Selectionsort_set:
             print("What Sorting-Algorithm do you want to see?")
             print("1) Bubblesort")
             print("2) Insertionsort")
             print("3) Shakersort")
             print("4) Quicksort")
+            print("5) Selectionsort")
             selection = input().lower()
         print("Press Space to start and to pause!")
         if selection in Bubblesort_set:
@@ -43,6 +45,8 @@ class Animate:
             Animate.Shakersort()
         if selection in Quicksort_set:
             Animate.Quicksort()
+        if selection in Selectionsort_set:
+            Animate.Selectionsort()
     def Bubblesort():
         Window("Bubblesort")
         _list = List()
@@ -55,6 +59,8 @@ class Animate:
         already_checked = []
         for p in _list.check_progress:
             Animate.check_loop(p,already_checked)
+
+    
     def Insertionsort():
         Window("Insertionsort")
         _list = List()
@@ -94,11 +100,24 @@ class Animate:
         for p in _list.check_progress:
             Animate.check_loop(p,already_checked)
 
+    def Selectionsort():
+            Window("Selectionsort")
+            _list = List()
+            _list.Selectionsort_step_by_step()
+            delay = int(4000 / len(_list.progress) + 7)
+            for p in _list.progress:         
+                Window.check_events()
+                Animate.render(p[0],vip=p[1],vvip=p[2])
+                pygame.time.delay(delay)
+            already_checked = []
+            for p in _list.check_progress:
+                Animate.check_loop(p,already_checked)
+
     def check_loop(p,already_checked):
         already_checked += p[1]                                         #inplace change
         Window.check_events()
         Animate.render(p[0],vvip=already_checked)
-        pygame.time.delay(int(1000/len(p[0])))
+        pygame.time.delay(int(100/len(p[0])))
 
 Animate.start()
 pygame.quit()

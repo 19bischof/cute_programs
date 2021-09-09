@@ -34,6 +34,7 @@ class List:
                     del l[i+1]
                     self.progress.append((l[:],[k],[i+1]))
                     break
+        self.values = l
         self.check_sorted()
 
     def Shakersort_step_by_step(self):
@@ -49,6 +50,7 @@ class List:
                     l[k-1],l[k] = l[k],l[k-1]
                     self.progress.append((l[:],[k-1],[len(l)-1-iteration,iteration]))
             iteration += 1
+        self.values = l
         self.check_sorted()
 
     def Quicksort_step_by_step(self):
@@ -75,6 +77,17 @@ class List:
         self.recursive_quicksort(lower_bound,up)
         self.recursive_quicksort(low,upper_bound)
             
+
+    def Selectionsort_step_by_step(self):
+        l = self.values
+        for k in range(len(l)-1):
+            smallest_i = k
+            for i in range(k,len(l)):
+                if l[smallest_i] > l[i]:
+                    smallest_i = i
+            l[smallest_i],l[k] = l[k],l[smallest_i]
+            self.progress.append((l[:],[smallest_i,k],[k-1,len(l)-1]))
+        # self.check_sorted()
 
 
     def check_sorted(self):
