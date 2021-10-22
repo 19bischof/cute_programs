@@ -1,0 +1,3 @@
+Wenn die clock zeigt 11:15 (es war 13:15) wurde die 9. Sekunde übersprungen kurz nach dem öffnen des Tabs
+genauso um 13:24 ( es zeigt 11:24)
+Stundenzahl um 2 verschoben
