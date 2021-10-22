@@ -4,17 +4,18 @@ import requests
 
 
 class quotes_dot_net_api_call:
-    uid = ''
-    tokenid = ''
+    uid = '9472'
+    token = 'uiGrwWzTtMe94oA3'
     searchtype = ['RANDOM', 'SEARCH', 'AUTHOR']
     searchtype_index = 0
     search_query = ''
     format = 'json'
     url = 'https://www.stands4.com/services/v2/quotes.php?uid={0}&tokenid={1}&searchtype={2}&query={3}&format={4}'.format(
-        uid, tokenid, searchtype[searchtype_index], search_query, format)
+        uid, token, searchtype[searchtype_index], search_query, format)
 
     def get():
-        response = requests.get(quotes_dot_net_api_call.url+'?')
-        json_quote = response.json()
-        print(json_quote)
-        return json_quote['results']['result']
+        response = requests.get(quotes_dot_net_api_call.url)
+        if (response.status_code == 200):
+            json_quote = response.json()
+            return {"content":json_quote['result']['quote'],"author":json_quote['result']['author']}
+        return None

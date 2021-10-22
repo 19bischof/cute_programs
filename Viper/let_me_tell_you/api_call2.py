@@ -11,8 +11,7 @@ class quotable_dot_io_api_call_:
 
     def get():
         response = requests.get(quotable_dot_io_api_call_.url)
-        json_quote = response.json()
-        return {'content': json_quote['content'],'author' : json_quote['author'], 'tags' : json_quote['tags']}
-
-
-quotable_dot_io_api_call_.get()
+        if (response.status_code == 200):
+            json_quote = response.json()
+            return {'content': json_quote['content'],'author' : json_quote['author'], 'tags' : json_quote['tags']}
+        return None
