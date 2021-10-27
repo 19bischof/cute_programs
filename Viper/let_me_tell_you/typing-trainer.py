@@ -2,6 +2,7 @@ import msvcrt
 import sys
 import math
 import os
+import pathlib
 import shutil
 import random
 import hashlib
@@ -17,6 +18,9 @@ white = '\033[37m'
 up = '\033[A'
 down = '\033[B'
 
+file_name = pathlib.Path(__file__).parent.resolve().__str__() + '\quotes.json'
+# print(file_name)
+# input()
 cutoff_points = []
 
 def get_new_quote():
@@ -32,7 +36,7 @@ def get_new_quote():
     if (quote_dict == None):
         print("The used API is not available!\nLoading quote from storage...")
         time.sleep(0.5)
-        with open('quotes.json','r') as file_r:
+        with open(file_name,'r') as file_r:
             file_json = json.loads(file_r.read())
             
             if (len(file_json)):
@@ -43,10 +47,10 @@ def get_new_quote():
                 quit()
     else:
         hash_v = hashlib.sha256(quote_dict['content'].encode('utf-8')).hexdigest()[:16]
-        with open('quotes.json','r') as file_r:
+        with open(file_name,'r') as file_r:
             file_json = json.loads(file_r.read())
             if (file_json.get(hash_v)== None):
-                with open('quotes.json','w') as file_w:
+                with open(file_name,'w') as file_w:
                     file_json[hash_v] = quote_dict
                     json.dump(file_json,file_w)
     return quote_dict
