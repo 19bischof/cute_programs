@@ -13,7 +13,7 @@ class List:
         
     def generate(self):
         for i in range(st.length):
-            self.values.append(random.randint(0,st.range))
+            self.values.append(random.randint(1,st.range))
 
     def Bubblesort_step_by_step(self):
         l = self.values
@@ -32,7 +32,7 @@ class List:
                 if l[k]>l[i]:
                     l.insert(k,l[i])
                     del l[i+1]
-                    self.progress.append((l[:],[k],[i+1]))
+                    self.progress.append((l[:],[i+1],[k]))
                     break
         self.values = l
         self.check_sorted()
@@ -86,8 +86,8 @@ class List:
                 if l[smallest_i] > l[i]:
                     smallest_i = i
             l[smallest_i],l[k] = l[k],l[smallest_i]
-            self.progress.append((l[:],[smallest_i,k],[k-1,len(l)-1]))
-        # self.check_sorted()
+            self.progress.append((l[:],[smallest_i],[0,k]))
+        self.check_sorted()
 
 
     def check_sorted(self):
