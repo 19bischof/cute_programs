@@ -130,7 +130,7 @@ class subnetter:
         if self.subnetmask_in_slash == -1:
             print("no subnetmask specified")
             return
-        print("/" + self.subnetmask_in_slash)
+        print("/{}".format(self.subnetmask_in_slash))
     def show_number_of_hosts(self):
         if self.subnetmask_in_slash == -1:
             print("no subnetmask specified")
