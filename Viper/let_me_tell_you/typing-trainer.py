@@ -14,7 +14,7 @@ from api_call import quotes_dot_net_api_call as q_net
 
 red = '\033[91m'
 turquoise = '\033[36m'
-green = '\033[32m'  # TODO the linebreaker function doesnt work correctly in some cases quote from Dale Carnegie responded quite badly in the Windows Terminal application with width of 122
+green = '\033[32m'  
 white = '\033[37m'
 up = '\033[A'
 down = '\033[B'
@@ -28,7 +28,6 @@ def get_new_quote():
     if (random.random() > 0):
         print("fetching from quotable.io...", flush=True)
         quote_dict = q_io.get()
-        # quote_dict = None
     else:
         print("fetching from quotes.net...", flush=True)
         quote_dict = q_net.get()
@@ -97,8 +96,6 @@ def start_game(cutoff_points):
     width = shutil.get_terminal_size().columns
     line_breaker(the_quote, width, cutoff_points)
 
-    # print(cutoff_points)
-    # input("terminal width = "+str(width)) debuggin stuff
 
     os.system('cls' if os.name == 'nt' else 'clear')
     for i in range(len(the_quote)):
@@ -114,14 +111,10 @@ def start_game(cutoff_points):
     # user character input starts here:
     start_time = time.time()
     while pointer < len(the_quote):
-        # print(pointer)
-        # print("")
         sys.stdin.flush()
 
-        # print("in the loop")
         key = msvcrt.getch()
         if key == bytes(the_quote[pointer], 'utf-8'):  # if correct chararcter input
-            # print("increment")
             print(turquoise+the_quote[pointer]+white, end="", flush=True)
             if (pointer in cutoff_points):
                 print(down + '\r', end="", flush=True)
@@ -130,12 +123,11 @@ def start_game(cutoff_points):
             os.system('cls' if os.name == 'nt' else 'clear')
             quit()
 
-        # print_task(pointer, the_quote)
     print()
     print('Quote by: {author}'.format(author=the_quote_data['author']))
     # 5 characters are a word
     wpm = len(the_quote) / 5 / ((time.time()-start_time) / 60)
-    print("wpm: ", wpm.__format__(".2f"))
+    print("wpm:", wpm.__format__(".2f"))
     save_quote(the_quote_data)
 
 
