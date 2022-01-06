@@ -1,8 +1,8 @@
 # api call for website https://github.com/lukePeavey/quotable
 import requests
+from pprint import pprint
 
-
-class quotable_dot_io_api_call_:
+class quotable_dot_io_api_call:
     id = ''  # get quote by id like /quotes/:{id}
     tags = ''  # tags like '/quotes?=love|happiness'
     if id != '':
@@ -10,8 +10,12 @@ class quotable_dot_io_api_call_:
     url = 'https://quotable.io/random'+id+tags
 
     def get():
-        response = requests.get(quotable_dot_io_api_call_.url)
+        response = requests.get(quotable_dot_io_api_call.url)
         if (response.status_code == 200):
             json_quote = response.json()
             return {'content': json_quote['content'],'author' : json_quote['author'], 'tags' : json_quote['tags']}
         return None
+
+if __name__ == "__main__":
+    call = quotable_dot_io_api_call.get()
+    pprint(call)
