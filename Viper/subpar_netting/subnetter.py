@@ -38,9 +38,9 @@ class subnetter:
                 return False
         return True
 
-    def set_subnetmask_in_slash(self, mask: int):        
+    def set_subnetmask_in_slash(self, mask: int):
         if type(mask) is str:
-            numb = mask.replace("/","")
+            numb = mask.replace("/", "")
             if not numb.isdigit():
                 print("bad subnetmask")
                 return
@@ -94,25 +94,7 @@ class subnetter:
         if self.subnetmask_in_slash == -1:
             print("no subnetmask specified")
             return
-        octets = []
-        mask = self.subnetmask_in_slash
-        for i in range(4):
-            if mask > 7:
-                octets.append(255)
-                mask -= 8
-                continue
-            number = 0
-            for i in range(mask):
-                number += 2**(7-i)
-            octets.append(number)
-            mask = 0
-        print(*octets, sep=".")
-
-    def show_ipadress(self):
-        if self.ipadress == "":
-            print("no ipadress specified")
-            return
-        print(self.ipadress)
+        print(self.binary_adress_to_decimal(self.bin_subnetmask))
 
     def show_bin_subnetmask(self):
         if self.subnetmask_in_slash == -1:
@@ -120,17 +102,24 @@ class subnetter:
             return
         print(self.bin_subnetmask)
 
+    def show_slash_subnetmask(self):
+        if self.subnetmask_in_slash == -1:
+            print("no subnetmask specified")
+            return
+        print("/{}".format(self.subnetmask_in_slash))
+
+    def show_dec_ipadress(self):
+        if self.ipadress == "":
+            print("no ipadress specified")
+            return
+        print(self.ipadress)
+
     def show_bin_ipadress(self):
         if self.bin_ipadress == "":
             print("no ipadress specified")
             return
         print(self.bin_ipadress)
 
-    def show_slash_subnetmask(self):
-        if self.subnetmask_in_slash == -1:
-            print("no subnetmask specified")
-            return
-        print("/{}".format(self.subnetmask_in_slash))
     def show_number_of_hosts(self):
         if self.subnetmask_in_slash == -1:
             print("no subnetmask specified")
@@ -191,6 +180,7 @@ class subnetter:
         for i in range(self.subnetmask_in_slash, 32):
             lob[i] = "1"
         print(self.binary_adress_to_decimal("".join(lob)))
+
 
 if __name__ == "__main__":
     s = subnetter()

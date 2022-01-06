@@ -64,7 +64,7 @@ show_subnetmask_menu.append_item(show_slash_mask_item)
 
 
 def pre_show_ipadress_in_decimal():
-    s.show_ipadress()
+    s.show_dec_ipadress()
     input()
 def pre_show_ipadress_in_binary():
     s.show_bin_ipadress()
