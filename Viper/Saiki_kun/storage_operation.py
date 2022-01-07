@@ -5,19 +5,35 @@ import pickle
 from settings import settings as st
 
 
-def fetch_and_store_animation(S: pygame.Surface = None):
-    comp_file = st.file_name + ".tar.gz"
-    raw_file = st.file_name
-    if S is None:
-        if os.path.isfile(comp_file):
-            shutil.unpack_archive(comp_file, "./")
-            with open(raw_file, "rb") as f:
+def fetch_and_store_animation(los: list[pygame.Surface] = None):
+    if los is None:
+        #fetching
+        if os.path.isfile(st.comp_file_path):
+            print("unpacking...")
+            shutil.unpack_archive(st.comp_file_path, st.dir_of_animations)
+            with open(st.raw_file_path, "rb") as f:
+                print("loading to variable...")
                 bust = pickle.load(f)
-            os.remove(raw_file)
-            return pygame.surfarray.make_surface(bust)
+            os.remove(st.raw_file_path)
+            los = []
+            print("converting to surface...")
+            for b in bust:
+                los.append(pygame.surfarray.make_surface(b))
+            return los
     else:
-        nda = pygame.surfarray.array2d(S)
-        with open(raw_file, "wb") as f:
-            pickle.dump(nda, f)
-        shutil.make_archive(raw_file, "gztar", "./", raw_file)
-        os.remove(raw_file)
+        #storing
+        ndas = []       #ndarrays
+        print("converting to array...")
+        for s in los:   #list of Surfaces
+            ndas.append(pygame.surfarray.array2d(s))  
+        del los  
+        with open(st.raw_file_path, "wb") as f:
+            print("dumping to file...")
+            pickle.dump(ndas, f)
+        del ndas
+        print("compressing...")
+        shutil.make_archive(st.raw_file_path, st.comp_protocol,st.dir_of_animations,st.raw_file_name)
+        os.remove(st.raw_file_path)
+if __name__ == "__main__":
+    fetch_and_store_animation([pygame.Surface((0,0))])
+    fetch_and_store_animation()

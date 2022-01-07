@@ -1,1 +1,7 @@
 __pycache__
+*.tar.gz
+*.zip
+*.mp4
+*.var
+venv/*
+venv
