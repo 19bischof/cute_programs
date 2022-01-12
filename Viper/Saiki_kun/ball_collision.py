@@ -1,6 +1,5 @@
 import pygame
 import os.path
-
 from pygame.constants import KEYDOWN
 import storage_operation as so
 import tkinter as tk #for screen size
@@ -8,8 +7,8 @@ import time
 from tqdm import trange
 from ball import ball
 from settings import settings as st
+from compile_video import entry_for_list_of_surface
 from win32gui import SetWindowPos
-pygame.init()
 
 
 collection_of_frames = []
@@ -22,6 +21,7 @@ x_pos,y_pos = int((screen_width - st.width)/2),int((screen_height-st.height)/2)
 x_pos += st.x_shift
 y_pos += st.y_shift
 def peek():
+    pygame.init()
     is_running = True
     background = pygame.Surface((st.width, st.height))
     background.fill(pygame.Color(st.background_color))
@@ -57,6 +57,7 @@ def render():
     ball.spawn_balls(st.width, st.height, st.max_number_of_balls)
 
     max_count = st.fps * st.duration
+    print("rendering...")
     for m in trange(max_count):
         new_surface = pygame.Surface((st.width, st.height))
         new_surface.blit(background, (0, 0))
@@ -66,6 +67,7 @@ def render():
 
 
 def display():
+    pygame.init()
     is_running = True
     clock = pygame.time.Clock()
     pygame.display.set_caption('Look!')
@@ -93,12 +95,14 @@ if __name__ == "__main__":
     print(st.comp_file_path)
     if os.path.isfile(st.comp_file_path):
         print("fetching...")
-        collection_of_frames = so.fetch_and_store_animation()
+        collection_of_frames = so.manage_big_files_entry()
     else:
-        print("rendering...")
         render()
         print("storing...")
-        so.fetch_and_store_animation(collection_of_frames)
+        so.manage_big_files_entry(collection_of_frames)
     print("number of frames:", len(collection_of_frames))
-    input("ready?")
+    if input("Do you want to store as Video?\n").lower().strip() in ("yes","y"):
+        entry_for_list_of_surface(collection_of_frames)
+    input("Upcoming is the pygame visual (Press Button to continue)")
     display()
+

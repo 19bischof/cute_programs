@@ -109,11 +109,12 @@ def start_game(cutoff_points):
     print('\r', end="", flush=True)
 
     # user character input starts here:
-    start_time = time.time()
+    start_time = 0
     while pointer < len(the_quote):
         sys.stdin.flush()
 
         key = msvcrt.getch()
+        if not start_time: start_time = time.time() 
         if key == bytes(the_quote[pointer], 'utf-8'):  # if correct chararcter input
             print(turquoise+the_quote[pointer]+white, end="", flush=True)
             if (pointer in cutoff_points):

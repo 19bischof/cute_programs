@@ -1,44 +1,84 @@
+import os
 import pygame
+from pygame import surfarray
 from storage_operation import fetch_and_store_animation
 import cv2
+import tqdm
 import numpy as np
 from settings import settings as st
 
-frameSize = (100,30)
+frameSize = (160, 90)
 
-def compile_vid(londa:list[np.ndarray]):
 
-    out = cv2.VideoWriter('one_output_video.mp4',
-                        cv2.VideoWriter_fourcc(*'MP4V'), 60,frameSize)
+def compile_vid(londa: list[np.ndarray]):
+    print("compiling video...")
+    out = cv2.VideoWriter(st.video_file_name,
+                          cv2.VideoWriter_fourcc(*'mp4v'), 60, frameSize)
     for nda in londa:
-        img = nda
+        img = nda        
         out.write(img)
 
     out.release()
+    if not os.path.isdir(st.video_directory):
+        os.mkdir(st.video_directory)
+    if os.path.isfile(st.video_file_path):
+        os.remove(st.video_file_path)
+    os.rename(st.video_file_name, st.video_file_path)
 
-def entry_for_list_of_surface(los:list[pygame.Surface]):
-    for s in los:
-        nda = pygame.surfarray.array2d(s)
-    new_nda = np.ones(frameSize[::-1]+(3,),dtype=np.uint8)
-    for index,col in enumerate(nda):
-        for iindex,e in enumerate(col):
-            h = hex(e)
-            h = h[2:]
-            loh = []
-            for i in range(0,6,2):
-                loh.append(h[i:i+2])
-            for i in range(len(loh)):
-                loh[i] = int(loh[i],16)
-            # print(type(loh))
-            # print(type(new_nda[0][0]))
-            new_nda[index][iindex] = loh[::-1]
-            
-    with open("at_i_is_100.txt","w") as f:
-        f.write(str(len(new_nda))+repr(new_nda))
+
+def entry_for_list_of_surface(los: list[pygame.Surface]):
+
+    global frameSize
+    ass = los[0]
+    frameSize = pygame.surfarray.array2d(ass).shape
     londa = []
-    for i in range(360):        
-        londa.append(new_nda)
+    print("converting to array...")
+    for s in tqdm.tqdm(los):
+        londa.append(np.flip(pygame.surfarray.array3d(s).transpose(1,0,2),axis=(2,)))
     compile_vid(londa)
+
+
+
+
 if __name__ == "__main__":
-    s = pygame.Surface(frameSize[::-1])
-    s.fill('#FF0FF0')
+    loc = []
+    a, b, c = 0, 0, 0
+    state = 0
+    while True:
+        aa = hex(a)[2:]
+        if len(aa) == 1:
+            aa = '0' + aa
+        bb = hex(b)[2:]
+        if len(bb) == 1:
+            bb = '0' + bb
+        cc = hex(c)[2:]
+        if len(cc) == 1:
+            cc = '0' + cc
+        loc.append('#'+aa+bb+cc)
+        if state == 0:
+            a += 1
+            if a == 255:
+                state = 1
+        elif state == 1:
+            b += 1
+            if b == 255:
+                state = 2
+        elif state == 2:
+            a -= 1
+            if a == 0:
+                state = 3
+        elif state == 3:
+            c += 1
+            if c == 255:
+                state = 4
+        elif state == 4:
+            a += 1
+            if a == 255:
+                break
+    surfaces = []
+    for c in loc:
+        s = pygame.Surface(frameSize)
+        s.fill(c)
+        surfaces.append(s)
+    input("You are going to overwrite with color diashow (otherwise ctrl c)")
+    entry_for_list_of_surface(surfaces)
