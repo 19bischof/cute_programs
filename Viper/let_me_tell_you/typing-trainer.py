@@ -14,7 +14,7 @@ from api_call import quotes_dot_net_api_call as q_net
 
 red = '\033[91m'
 turquoise = '\033[36m'
-green = '\033[32m'  
+green = '\033[32m'
 white = '\033[37m'
 up = '\033[A'
 down = '\033[B'
@@ -55,9 +55,9 @@ def line_breaker(the_quote, width, cutoff_points):
     shifted_by = 0
     k = 0
     while k < (math.floor((len(the_quote) + shifted_by)/width)):
-    # for each line of the quote in terminal
+        # for each line of the quote in terminal
         if (the_quote[(k+1)*width-1 - shifted_by] != ' '):
-        # if quote-character at EOL in terminal not a space -> search to the left for next space
+            # if quote-character at EOL in terminal not a space -> search to the left for next space
             for i in range(1, width):
                 # searching leftwards until a space is found
                 if (the_quote[(k+1)*width - i - 1 - shifted_by] != ' '):
@@ -96,7 +96,6 @@ def start_game(cutoff_points):
     width = shutil.get_terminal_size().columns
     line_breaker(the_quote, width, cutoff_points)
 
-
     os.system('cls' if os.name == 'nt' else 'clear')
     for i in range(len(the_quote)):
         if (i in cutoff_points):
@@ -109,17 +108,21 @@ def start_game(cutoff_points):
     print('\r', end="", flush=True)
 
     # user character input starts here:
+    wrong_input = 0
     start_time = 0
     while pointer < len(the_quote):
         sys.stdin.flush()
 
         key = msvcrt.getch()
-        if not start_time: start_time = time.time() 
+        if not start_time:
+            start_time = time.time()
         if key == bytes(the_quote[pointer], 'utf-8'):  # if correct chararcter input
             print(turquoise+the_quote[pointer]+white, end="", flush=True)
             if (pointer in cutoff_points):
                 print(down + '\r', end="", flush=True)
             pointer += 1
+        else:
+            wrong_input += 1
         if key == b'\x03':  # if CTRL + C
             os.system('cls' if os.name == 'nt' else 'clear')
             quit()
@@ -129,6 +132,8 @@ def start_game(cutoff_points):
     # 5 characters are a word
     wpm = len(the_quote) / 5 / ((time.time()-start_time) / 60)
     print("wpm:", wpm.__format__(".2f"))
+    print("accuracy:", ((len(the_quote)/(len(the_quote)+wrong_input))
+          * 100).__format__(".2f")+"%")
     save_quote(the_quote_data)
 
 
