@@ -8,9 +8,16 @@ class pipino:
     def get_start_surface(cls):
         s = pygame.Surface(st.size)
         s.fill(st.white)
+        font = pygame.font.SysFont('Courier',st.font_size,bold=True)
         for i in range(5):
-            pygame.draw.line(s, st.black, (0, st.height-(st.line_diff*(i+1)++st.y_offset)),
-                             (st.width, st.height-(st.line_diff*(i+1)+st.y_offset)), st.line_width)
+            h = st.height-(st.line_diff*(i+1)+st.y_offset)
+            if i == 0 and cls.help_letter:
+                letter = font.render(cls.notes[i*2+1],True,st.red)
+                s.blit(letter,(0,h+st.font_size*0.5))
+            pygame.draw.line(s,st.black,(0,h),(st.width,h), st.line_width)
+            if cls.help_letter:
+                letter = font.render(cls.notes[i*2+3],True,st.red)
+                s.blit(letter,(0,h-st.font_size*1.5))
         cls.start_surface = s
 
     @classmethod
@@ -20,16 +27,20 @@ class pipino:
 
     @classmethod
     def next_note(cls):
-        if cls.init is False:
-            cls.get_start_surface()
+        if cls.init:
+            cls.do_init()
+            cls.init = False
         while True:
             pos = random.randrange(len(cls.g_notes))
-            cls.clef = cls.clefs[random.randrange(2)]
+            cls.clef = cls.clefs[random.randrange(len(cls.clefs))]
+            # cls.clef = 'g'  #to just train g-clef
             if cls.cur_pos != pos:
                 break
+        
         cls.cur_pos = pos
         cls.clef_update()
         cls.cur_note = cls.notes[cls.cur_pos]
+        cls.get_start_surface()
         cls.draw_note()
         cls.draw_clef()
 
@@ -59,11 +70,16 @@ class pipino:
         # clef_s.set_alpha(160) #if you want to set background color to emphasize the clef
         sub_s.blit(clef_s, (0, 0))
         cls.cur_surface.blit(sub_s, (0, (st.y_offset-c_height)/2))
-
+    
+    @classmethod
+    def do_init(cls):
+        cls.clefs = st.what_clefs
+    
     g_clef_png = pygame.image.load('./images/g_clef.png')
     f_clef_png = pygame.image.load('./images/f_clef.png')
-    init = False
-    clefs = ('g', 'f')
+    init = True
+    help_letter = st.easy_mode
+    
     g_notes = ('c', 'd', 'e', 'f', 'g', 'a', 'h', 'c', 'd', 'e', 'f', 'g', 'a')
     f_notes = ('e', 'f', 'g', 'a', 'h', 'c', 'd', 'e', 'f', 'g', 'a', 'h', 'c')
     all_notes = {'g': g_notes, 'f': f_notes}
