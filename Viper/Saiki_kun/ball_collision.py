@@ -1,3 +1,4 @@
+from numpy import number
 import pygame
 import os.path
 from pygame.constants import KEYDOWN
@@ -50,21 +51,29 @@ def peek():
         time.sleep(0.1)
         pygame.display.update()
 
-
-def render():
+    
+def clean_render(frame_range = (0,st.fps*st.duration)):
+    
     background = pygame.Surface((st.width, st.height))
     background.fill(pygame.Color(st.background_color))
-    ball.spawn_balls(st.width, st.height, st.max_number_of_balls)
-
-    max_count = st.fps * st.duration
-    print("rendering...")
-    for m in trange(max_count):
+    for m in range(*frame_range):
         new_surface = pygame.Surface((st.width, st.height))
         new_surface.blit(background, (0, 0))
         ball.move_balls()
         ball.draw_balls_on_Surface(new_surface)
         collection_of_frames.append(new_surface.copy())
 
+def render(frame_range = (0,st.fps*st.duration)):
+    
+    background = pygame.Surface((st.width, st.height))
+    background.fill(pygame.Color(st.background_color))
+    print("rendering...")
+    for m in trange(*frame_range):
+        new_surface = pygame.Surface((st.width, st.height))
+        new_surface.blit(background, (0, 0))
+        ball.move_balls()
+        ball.draw_balls_on_Surface(new_surface)
+        collection_of_frames.append(new_surface.copy())
 
 def display():
     pygame.init()
@@ -84,19 +93,46 @@ def display():
         window_surface.blit(collection_of_frames[i], (0, 0))
         pygame.display.update()
         i += 1
+def big_frame_management():
+    print("number of steps:",st.number_of_steps)
+    print("number of bytes:", st.all_bytes)
+    print(st.comp_file_path)
+    if os.path.isfile(st.comp_file_path):
+        big_frame_management_fetch()
+    else:
+        big_frame_management_render()
 
+def big_frame_management_fetch():
+    global collection_of_frames    
+    collection_of_frames = []
 
-if __name__ == "__main__":
-    preview = False
-    # preview = True
-    if preview:
-        peek()
-        quit()
+    #usually you want to do each fetch iteration in a new thread while pygame is presenting the frames but cant be bothered (。_。)
+    #actually now that i think about it it is a perfect usage of generators in python to compile video and render on pygame
+    #so that is something to do for you!!
+    while True:
+        cur_frames, breaked = so.manage_big_files_entry()
+        collection_of_frames += cur_frames
+        if breaked:
+            break
+    display()
+    
+def big_frame_management_render():
+    global collection_of_frames
+    ball.spawn_balls(st.width, st.height, st.max_number_of_balls)
+    for frame_index in trange(0,st.number_of_frames,st.step):
+        collection_of_frames = []
+        frame_range = (frame_index,frame_index + st.step)
+        clean_render(frame_range)
+        so.manage_big_files_entry(collection_of_frames,step = st.step,clean=True)
+
+def small_frames():
+    global collection_of_frames
     print(st.comp_file_path)
     if os.path.isfile(st.comp_file_path):
         print("fetching...")
         collection_of_frames = so.manage_big_files_entry()
     else:
+        ball.spawn_balls(st.width, st.height, st.max_number_of_balls)
         render()
         print("storing...")
         so.manage_big_files_entry(collection_of_frames)
@@ -105,4 +141,13 @@ if __name__ == "__main__":
         entry_for_list_of_surface(collection_of_frames)
     input("Upcoming is the pygame visual (Press Button to continue)")
     display()
+
+if __name__ == "__main__":
+    preview = False
+    # preview = True
+    if preview:
+        peek()
+        quit()
+    # small_frames()
+    big_frame_management()
 

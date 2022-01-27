@@ -5,9 +5,12 @@ import pygame
 import numpy
 import pickle
 import zipfile
+import time
 from tqdm import tqdm
 from settings import settings as st
+import threading
 
+last_file_name = ""
 
 def fetch_and_store_animation(los: list[pygame.Surface] = None):
     in_memory = False
@@ -54,40 +57,95 @@ def fetch_and_store_animation(los: list[pygame.Surface] = None):
             shutil.make_archive(st.raw_file_path, st.comp_protocol,st.dir_of_animations,st.raw_file_name)
             os.remove(st.raw_file_path)
 
-def manage_big_files_entry(los: list[pygame.Surface] = None):
+def zip_data_gen(step = st.step):
     
-    pixels_in_frame = st.width*st.height
-    size_of_part = int(10000000 / pixels_in_frame)
-    print("size:",size_of_part)
+    global stash,already_fetched
+    print("step:",step)
+    stash = None
+    already_fetched = []
+    my_frames = []
+    prep_zip_data_for_yield()
+    while True:
+        if stash == my_frames:
+            print(len(already_fetched),number_of_files)
+            time.sleep(0.5)
+            continue
+        my_frames = stash.copy()
+        threading.Thread(target=prep_zip_data_for_yield,args=(step,already_fetched)).start()
+        print("yielding")
+        yield my_frames
+        if len(already_fetched) >= number_of_files:
+            break
 
+def prep_zip_data_for_yield(step = st.step,already_fetched_2 = None):
+    global stash,already_fetched,number_of_files
+    if already_fetched_2 is not None:
+        already_fetched = already_fetched_2
+    print("shere",step)
+    length_before = len(already_fetched)
+    with zipfile.ZipFile(st.comp_file_path,"r") as zip_file:
+        busty = []
+        number_of_files = len(zip_file.filelist)
+
+        for index,file in enumerate(zip_file.filelist):
+            if index in already_fetched:
+                continue
+            name = file.filename
+            bite = ((zip_file.read(name)))
+            print("read:",name)
+            busty += (pickle.loads(bite))
+            already_fetched += [index]
+            print("indexlsdflks",index,step+length_before)
+            if index == step+length_before:    #minus one because it is increased in the line before
+                break
+    cur_los = []
+    bust = busty
+    for b in (bust):
+        cur_los.append(pygame.surfarray.make_surface(b))
+    stash =  cur_los
     
+
+def manage_big_files_entry(los: list[pygame.Surface] = None,step = st.step,clean = False):
+    global last_file_name
+    breaked = False
     if los is None:
         #fetching
         with zipfile.ZipFile(st.comp_file_path,"r") as zip_file:
             busty = []
-            for file in zip_file.filelist:
+            for index,file in enumerate(zip_file.filelist):
                 name = file.filename
                 bite = ((zip_file.read(name)))
                 print("read:",name)
                 busty += (pickle.loads(bite))
+                if index == step:
+                    breaked = True
+                    break
         cur_los = []
         bust = busty
         print("converting to surface...")
         for b in tqdm(bust):
             cur_los.append(pygame.surfarray.make_surface(b))
-        return cur_los
+        return cur_los,breaked
     else:
         #storing
         index_start = 0
-        index_end = size_of_part
+        index_end = step
         iteration = 0
-        if os.path.isfile(st.comp_file_path):
+        if os.path.isfile(st.comp_file_path) and last_file_name == "":
             os.remove(st.comp_file_path)
-        print("converting to array...")
+        if last_file_name != "":
+            iteration = int(last_file_name[len(st.raw_file_name+"__"):]) +1
+        if not clean:
+            print("converting to array...")
         ndas = []
-        for s in tqdm(los):   
-            ndas.append(pygame.surfarray.array3d(s))   
-        print("compressing...")
+        if not clean:
+            for s in tqdm(los):   
+                ndas.append(pygame.surfarray.array3d(s))   
+        else:
+            for s in los:
+                ndas.append(pygame.surfarray.array3d(s))
+        if not clean:
+            print("compressing...")
         while len(ndas)>0:
             if index_end >= len(los):
                 index_end = len(los)
@@ -95,7 +153,9 @@ def manage_big_files_entry(los: list[pygame.Surface] = None):
             if not os.path.isdir(st.dir_of_animations):
                 os.mkdir(st.dir_of_animations)
             #in memory only:
-            print("write:",st.raw_file_name+"__"+str(iteration))
+            if not clean:
+                print("write:",st.raw_file_name+"__"+str(iteration))
+            last_file_name = st.raw_file_name+"__"+str(iteration)
             with zipfile.ZipFile(st.comp_file_path,"a",zipfile.ZIP_LZMA) as zip_file:
                 zip_file.writestr(st.raw_file_name+"__"+str(iteration),pickle.dumps(cur_ndas))
                 

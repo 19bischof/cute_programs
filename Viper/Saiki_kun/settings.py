@@ -1,6 +1,6 @@
 factor = 1
 class settings:
-    ball_radius = 8*factor
+    ball_radius = 10*factor
     ball_speed = 1 * factor
     background_color = '#052732'
     ball_color = '#e6da95'
@@ -13,8 +13,15 @@ class settings:
     x_shift = -8
     y_shift = -31
     fps = 60
-    duration = 180   #in seconds
-    raw_file_name = str(width)+"x"+str(height)+"_of_" + str(max_number_of_balls)+"_with_"+str(ball_radius)+"_in_" + str(duration)+".var"
+    duration = 120   #in seconds
+    #--------------------
+    number_of_frames = fps * duration
+    all_bytes = width * height * fps * duration * 3 #3 because 24 bit color for each pixel
+    billion = 1000000000    
+    number_of_steps = int(all_bytes / billion * 100) + 1    #times 100 for fun so to get more files
+    step = int(number_of_frames / number_of_steps)
+    #----------------------
+    raw_file_name = "in"+str(step)+"and"+str(width)+"x"+str(height)+"_of_" + str(max_number_of_balls)+"_with_"+str(ball_radius)+"_in_" + str(duration)+".var"
     comp_file_name = raw_file_name + ".zip"
     comp_protocol = "zip"    #gztar
     dir_of_animations = "animations"

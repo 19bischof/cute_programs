@@ -53,6 +53,8 @@ class ball:
         
         return False
     def collides_witih_neighbours_or_OOB(self):
+        #doesnt work as of yet -> even the theory isn't thought out properly : there are a max of two possible neighbours on each side (maybe)
+        #how to calculate that and even is that worth it considering the rendering of collisions is extremely fast
         #if OOB:
         if self.position[0] < ball.radius or self.position[0]> st.width - ball.radius:
             return True
