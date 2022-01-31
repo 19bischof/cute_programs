@@ -1,8 +1,8 @@
-import pygame  # import after userinput so window is in front
-from time import sleep
-from piano_logic import pipino
 from settings import settings as st
 st.config()
+from time import sleep
+from piano_logic import pipino
+import pygame  # import after userinput so window is in front
 
 pygame.init()
 screen = pygame.display.set_mode(st.size)
