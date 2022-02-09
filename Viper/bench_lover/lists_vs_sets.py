@@ -49,7 +49,7 @@ buck = set(ar)
 print("initialized iterables")
 
 print("starting membership benchmark")
-count = 100
+count = 1000
 members = gen_string_ar(count)  #members are generated before benchmark so result is more pure
 ar_t = bench_membership(count,members,ar)
 buck_t = bench_membership(count,members,buck)
