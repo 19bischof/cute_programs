@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "C:/Users/m.bischof/Desktop/cute/cute_programs/Viper/pipino/main.py"
+   "value": "C:/Users/m.bischof/Desktop/cute_programs/Viper/pipino/main.py"
   },
   {
    "optionDest": "onefile",
@@ -63,7 +63,7 @@
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/m.bischof/Desktop/cute/cute_programs/Viper/pipino/images;images/"
+   "value": "C:/Users/m.bischof/Desktop/cute_programs/Viper/pipino/images;images/"
   }
  ],
  "nonPyinstallerOptions": {
