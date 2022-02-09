@@ -75,10 +75,8 @@ class i_menu:
         for i in range(len(self.options)+1):    #+1 for the description
             print(up+" "*(width-1)+'\r', end="")
         for i in range(len(self.options)):
-            highlight = fg('white') + bg('deep_pink_4c')+ attr(
-                'underlined')
+            highlight = fg('white') + bg('deep_pink_4c')+ attr('underlined')
             pre = highlight if i == self.selected else ""
-            after = attr('res_underlined') if i == self.selected else ""
             print("{0}{1}".format(pre, self.options[i]) + attr('reset'))
             if i == self.selected and self.desc:
                 print(fg('green')+textwrap.shorten(self.desc[i],width)+attr('reset'))
@@ -87,6 +85,8 @@ class i_menu:
 if __name__ == "__main__":
     opts = ("first", "second", "third", "fourth")
     desc = ("erste "*100,"zweite "*20,"dritte "*5,"vierte "*60)
-    choice = str(i_menu(opts,desc=desc))
+    choice = i_menu(opts,desc=desc,get_index=True)()
     print(choice)
     
+
+
