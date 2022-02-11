@@ -6,7 +6,7 @@ screen."""
             self.impl = _GetchWindows()
         except ImportError:
             self.impl = _GetchUnix()
-
+            
     def __call__(self): return self.impl()
 
 
@@ -23,7 +23,7 @@ class _GetchUnix:
             ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+        return ch.encode("utf-8")
 
 
 class _GetchWindows:
