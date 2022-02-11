@@ -1,3 +1,8 @@
+# a text based tictactoe game with bots to play with or pitch against each other
+# if you want to play put input_place_sign in player_methods
+# if two users put it 2 times
+# there are 5 bots that work in a hierarchy
+# with bot5 calling bot4 if it can't solve it and so on 
 import os
 from colored import fg, attr
 import random
@@ -15,13 +20,16 @@ y_names = ("top", "center", "bottom")
 x_names = ("left", "middle", "right")
 
 grid = [[0] * 3 for x in range(3)]  # 0:empty, 1:player1, 2:player2
+# syntax: grid[y][x]
 history = []
 p_index = random.randrange(2)  # 0 is player1, 1 is player2
-p_colors = (fg("chartreuse_3a"),fg("red_3b"))
+p_colors = (fg("chartreuse_3a"), fg("red_3b"))
 pre = (p_colors[0] + "Player1", p_colors[1] + "Player2")
+clean = False #if already cleared console
 
 
 def input_place_sign():
+    # user method for placing sign
     global p_index
     stopping = False
     logging.info("Player{} is choosing with input".format(p_index + 1))
@@ -66,6 +74,7 @@ def input_place_sign():
 
 
 def finished():
+    # check if game finished
     logging.debug("check for winner")
     print(attr("reset"), end="", flush=True)
     # check for winner
@@ -87,31 +96,51 @@ def finished():
         logging.info("Player{} won".format(grid[2][0]))
         return True
     logging.debug("check for possibility to win")
-    # check if there can be a winner
-    # example: if row not full and row has not one of each -> someone can win
+    # check if there can be a winner: return False if someone can win else return True
+    # example: if line not full and line has not one of each -> someone can win
+    # furthermore: if there are only 2 or 3 empty spaces in grid and those are located in a line
+    # -> that line can never be won by one player! however someone can still win in another line somewhere else
+    one_row_grid = grid[0] + grid[1] + grid[2]
     trans = list(map(list, zip(*grid)))
     for i in range(3):
         if grid[i].count(0) != 0:
             if (grid[i].count(1), grid[i].count(2)) != (1, 1):
-                return False
+                if one_row_grid.count(0) == grid[i].count(0) != 1:
+                    pass
+                else:
+                    return False
         if trans[i].count(0) != 0:
             if (trans[i].count(1), trans[i].count(2)) != (1, 1):
-                return False
+                if one_row_grid.count(0) == trans[i].count(0) != 1:
+                    pass
+                else:
+                    return False
     diags = ((grid[0][0], grid[1][1], grid[2][2]), (grid[2][0], grid[1][1], grid[0][2]))
     for i in range(2):
         if diags[i].count(0) != 0:
             if (diags[i].count(1), diags[i].count(2)) != (1, 1):
-                return False
+                if one_row_grid.count(0) == diags[i].count(0) != 1:
+                    pass
+                else:
+                    return False
     print("No one wins!")
     logging.info("no possibility to win")
     return True
 
+
 def clear_screen():
-    up = '\033[A'
+    # efficient screen cleaning
+    global clean
+    if not clean:
+        os.system("cls" if os.name == "nt" else "clear")
+        clean = True
+    up = "\033[A"
     for i in range(5):
-        print(up+" "*50,end="\r",flush=True)
+        print(up + " " * 50, end="\r", flush=True)
+
 
 def func_place_sign(c: tuple[int]):  # c[0] is y; c[1] is x
+    # bot method for placing sign
     global p_index
     clear_screen()
     if grid[c[0]][c[1]]:
@@ -135,7 +164,7 @@ def bot1_angela():
 
 
 def bot2_amelie():
-    # function: make mirrored move if possible
+    # function: make mirrored move of enemy's previous
     logging.info("Player{} is choosing with bot2_amelie".format(p_index + 1))
     calc = {0: 2, 1: 0, 2: -2}
     try:
@@ -154,6 +183,8 @@ def bot2_amelie():
 
 def bot3_aurora():
     # function: make move in corners and middle to form multiple lines at once
+    # best corner is calculated by adding the score of row, column and diagonal
+    # when no best corner: choose random corner
     logging.info("Player{} is choosing with bot3_aurora".format(p_index + 1))
     corners = ((0, 0), (2, 0), (2, 2), (0, 2))
     if not grid[1][1]:
@@ -181,7 +212,8 @@ def bot3_aurora():
                     line_score += 1
                 elif val == int(not p_index) + 1:
                     impossible = True
-            if impossible: line_score = -1
+            if impossible:
+                line_score = -1
             corner_score += line_score
         if corner_score > best_corner_score:
             logging.debug("corner_score updated to {}".format(corner_score))
@@ -192,9 +224,9 @@ def bot3_aurora():
         return
     shuffled = list(corners)
     random.shuffle(shuffled)
-    for y,x in shuffled:
+    for y, x in shuffled:
         if not grid[y][x]:
-            func_place_sign((y,x))
+            func_place_sign((y, x))
             return
     logging.debug("unable to find a move")
     bot2_amelie()
@@ -253,6 +285,9 @@ def bot4_anasthasia():
 
 def bot5_ashley():
     # function: move on pattern
+    # pattern1: if enemy started with corner -> place in middle
+    # pattern2: if enemy started with corner, you with middle, enemy with opposite corner
+    # -> place in random edge
     logging.info("Player{} is choosing with bot5_ashley".format(p_index + 1))
     corners = ((0, 0), (2, 0), (2, 2), (0, 2))
     edges = ((0, 1), (1, 0), (2, 1), (1, 2))
@@ -271,12 +306,26 @@ def bot5_ashley():
 
 def print_grid():
     gar = grid[0].copy() + grid[1].copy() + grid[2].copy()
-    clrs = [p_colors[x-1] if x != 0 else "" for x in gar]
-    re_u = attr('reset') + attr('underlined')
+    clrs = [p_colors[x - 1] if x != 0 else "" for x in gar]
+    re_u = fg("white") + attr("underlined")
     # input(repr(clrs))
-    row_one = attr("underlined") + " {p1}{}{r} | {p2}{}{r} | {p3}{}{r} ".format(*grid[0],p1=clrs[0],p2=clrs[1],p3=clrs[2],r=re_u) + attr("reset")
-    row_two = attr("underlined") + " {p1}{}{r} | {p2}{}{r} | {p3}{}{r} ".format(*grid[1],p1=clrs[3],p2=clrs[4],p3=clrs[5],r=re_u) + attr("reset")
-    row_thr = " {p1}{}{r} | {p2}{}{r} | {p3}{}{r} ".format(*grid[2],p1=clrs[6],p2=clrs[7],p3=clrs[8],r=attr('reset'))
+    row_one = (
+        attr("underlined")
+        + " {p1}{}{r} | {p2}{}{r} | {p3}{}{r} ".format(
+            *grid[0], p1=clrs[0], p2=clrs[1], p3=clrs[2], r=re_u
+        )
+        + attr("reset")
+    )
+    row_two = (
+        attr("underlined")
+        + " {p1}{}{r} | {p2}{}{r} | {p3}{}{r} ".format(
+            *grid[1], p1=clrs[3], p2=clrs[4], p3=clrs[5], r=re_u
+        )
+        + attr("reset")
+    )
+    row_thr = " {p1}{}{r} | {p2}{}{r} | {p3}{}{r} ".format(
+        *grid[2], p1=clrs[6], p2=clrs[7], p3=clrs[8], r=attr("reset")
+    )
     print(attr("reset") + "\t" + row_one, row_two, row_thr, sep="\n\t")
 
 
@@ -290,9 +339,13 @@ def print_help():
 
 
 if __name__ == "__main__":
-    os.system('cls' if os.name == 'nt' else 'clear')
     logging.info("Running in __main__")
-    player_methods = {0: input_place_sign, 1: bot5_ashley, 2:bot3_aurora,3:bot1_angela}  # even is player1, odd is player2
+    player_methods = {
+        0: bot4_anasthasia,
+        1: bot5_ashley
+        # 2: bot3_aurora,
+        # 3: bot1_angela,
+    }  # even is player1, odd is player2
     logging.debug("player methods are " + repr(player_methods))
     logging.debug("starting Game Loop")
     i = p_index
@@ -305,12 +358,7 @@ if __name__ == "__main__":
             print_grid()
         if player_methods[i] != input_place_sign:
             time.sleep(1)
-        i = (i+1) % len(player_methods)
+        i = (i + 1) % len(player_methods)
     print_grid()
 
-# ideas for writing a tic bot:
-# -instead of choosing cells, choosing lines seems better
-# -when opponent one away from winning stop it
-# -start from either corner or middle
-# -make program react by mirroring
-# -program patterns like: if opponent starts from corner choose opposing corner
+
