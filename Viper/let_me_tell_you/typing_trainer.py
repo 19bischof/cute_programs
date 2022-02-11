@@ -13,7 +13,8 @@ white = '\033[37m'
 up = '\033[A'
 down = '\033[B'
 json_file_path = pathlib.Path(
-    __file__).parent.absolute().__str__() + '\quotes.json'
+    __file__).parent.absolute().as_posix() + '/quotes.json'
+
 
 
 def get_new_quote():
