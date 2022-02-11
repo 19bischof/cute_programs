@@ -1,16 +1,10 @@
-import msvcrt
-import sys
-import math
-import os
-import pathlib
-import shutil
-import random
-import hashlib
-import json
-import time
+import sys,os,shutil
+import math,random,hashlib
+import json,time
 import pathlib
 from api_call2 import quotable_dot_io_api_call as q_io
 from api_call import quotes_dot_net_api_call as q_net
+from getch import Getch
 
 red = '\033[91m'
 turquoise = '\033[36m'
@@ -73,6 +67,8 @@ def line_breaker(the_quote, width, cutoff_points):
             cutoff_points.append((k+1)*width-1 - shifted_by)
         k += 1
 
+# well now i know that what i wrote is completely obsolete since there is a very nice module called textwrap
+# that does this exact same thing but I'm just gonna keep what I wrote, since it would feel like a waste (●'◡'●)
 
 def save_quote(quote_dict):
     hash_v = hashlib.sha256(
@@ -110,10 +106,11 @@ def start_game(cutoff_points):
     # user character input starts here:
     wrong_input = 0
     start_time = 0
+    getch = Getch()
     while pointer < len(the_quote):
         sys.stdin.flush()
 
-        key = msvcrt.getch()
+        key = getch()
         if not start_time:
             start_time = time.time()
         if key == bytes(the_quote[pointer], 'utf-8'):  # if correct chararcter input
