@@ -6,10 +6,10 @@ class cheese:
     def __init__(self):
         one_block = [False] * 4  # top right down left
         self.all_blocks_lines = [
-            [one_block.copy() for y in range(st.blocks_length)]
-            for x in range(st.blocks_length)
+            [one_block.copy() for y in range(st.blocks_no)]
+            for x in range(st.blocks_no)
         ]
-        self.all_blocks_player = [[-1] * st.blocks_length] * st.blocks_length
+        self.all_blocks_player = [[-1] * st.blocks_no] * st.blocks_no
         self.last_move = None  # ((c,r),line_index)
         self.cur_player = random.randrange(st.player_count)
 
@@ -33,7 +33,7 @@ class cheese:
         blocks_one_row = []
         winner = -1
         win_count = 0
-        for i in range(st.blocks_length):
+        for i in range(st.blocks_no):
             blocks_one_row += self.all_blocks_player[i]
         for p in range(st.player_count):
             c = blocks_one_row.count(p)
