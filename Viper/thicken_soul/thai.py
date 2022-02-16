@@ -357,10 +357,11 @@ def reset_game():
     history = []
     p_index = random.randrange(2)
     
+
 if __name__ == "__main__":
     if log_it: logging.info("Running in __main__")
     player_methods = {
-        0: bot3_anasthasia,
+        0: input_place_sign,
         1: bot4_ashley
     }  # even is player1, odd is player2
     if log_it: logging.debug("player methods are " + repr(player_methods))

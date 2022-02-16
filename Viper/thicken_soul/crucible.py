@@ -22,9 +22,9 @@ def one_game(methods):
     return -1
 
 
-methods = {0: thai.bot4_ashley, 1: thai.bot3_anasthasia}
+methods = {0: thai.bot0_angela, 1: thai.bot0_angela}
 results = []
-iterations = 3000
+iterations = 30000
 for i in tqdm(range(iterations)):
     results.append(one_game(methods))
     thai.reset_game()
