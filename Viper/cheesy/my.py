@@ -26,15 +26,18 @@ def check_mouse():
         y_div += 1
     # check if click on vertical:
     if x - (x_div*st.l_length) <= st.hitbox:
-        ch.set_line(y_div, x_div, "vertical")
+        if y_div < st.blocks_no:
+            ch.set_line(y_div, x_div, "vertical")
     # check if click on horizontal
-    if y - (y_div*st.l_length) <= st.hitbox:
-        ch.set_line(y_div, x_div, "horizontal")
+    elif y - (y_div*st.l_length) <= st.hitbox:
+        if x_div < st.blocks_no:
+            ch.set_line(y_div, x_div, "horizontal")
 
 
 def draw_map():
     s = pygame.Surface((st.win_width+st.win_x_off*2,
                        st.win_height+st.win_y_off*2))
+    s.fill(st.back_color)
     # vertical
     for c_i, c in enumerate(range(0, st.l_length*st.blocks_no, st.l_length)):
         for r_i, r in enumerate(range(0, st.l_length*(st.blocks_no+1), st.l_length)):
@@ -54,7 +57,7 @@ def draw_map():
             if ch.all_blocks_player[c_i][r_i] != -1:
                 # print(c_i,r_i)
                 pygame.draw.rect(s, st.block_colors[ch.all_blocks_player[c_i][r_i]],
-                                 (r_i*st.l_length, c_i*st.l_length, st.l_length, st.l_length))
+                                 (r_i*st.l_length+st.l_width/2, c_i*st.l_length+st.l_width/2, st.l_length-st.l_width, st.l_length-st.l_width))
 
     return s
 
@@ -73,5 +76,6 @@ while st.running:
             check_mouse()
 
     window_surface.blit(background, (0, 0))
+    background.fill(st.back_color)
     background.blit(draw_map(), (st.win_x_off, st.win_y_off))
     pygame.display.update()

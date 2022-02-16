@@ -1,5 +1,3 @@
-from cv2 import line
-from numpy import block
 from settings import settings as st
 
 import random
@@ -60,6 +58,7 @@ class cheese:
 
 
     def set_line(self, c, r, line_type):
+        # print(c,r,line_type)
         c, r, line_index = self._get_line(c, r, line_type)
         if self.all_blocks_lines[c][r][line_index]:
             return "already set!"
