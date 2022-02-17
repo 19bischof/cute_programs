@@ -17,9 +17,12 @@ img = cv2.imread(r'C:\Users\m.bischof\Pictures\canyoureadthis.PNG')
 # cv2.imshow('Detected text', img)
 # cv2.waitKey(0)
 from PIL import ImageGrab
+import string
 import win32gui
 import time
 import enchant
+from pynput.keyboard import Key, Controller
+keyboard = Controller()
 d_spell = enchant.Dict("en_US")
 toplist, winlist = [], []
 def enum_cb(hwnd, results):
@@ -34,32 +37,48 @@ print(hwnd,type(hwnd))
 
 win32gui.SetForegroundWindow(hwnd)
 bbox = win32gui.GetWindowRect(hwnd)
-all_s = []
-start = time.perf_counter()
-while time.perf_counter() - start < 10:
-    img = ImageGrab.grab(bbox)
-    # img.show()
-    s = pytesseract.image_to_string(img)
-    print(s)
-    all_s.append(s)
-dick = {}
-for s in all_s:
-    if s in dick.keys():
-        dick[s] += 1
-    else:
-        dick[s] = 1
-true_dick = {x:0 for x in dick.keys()}
-for i in dick.keys():
-    words = i.split(' ')
-    for word in words:
-        true_dick[i] += int(d_spell.check(word))
-best_i = -1
-best_sum = 0
-for i,value in true_dick.items():
-    if value > best_sum:
-        best_sum = value
-        best_i = i
-print(best_i)
-from pynput.keyboard import Key, Controller
-keyboard = Controller()
-keyboard.type(best_i)
+while 1:
+    all_s = []
+    start = time.perf_counter()
+    while time.perf_counter() - start < 1:
+        img = ImageGrab.grab(bbox)
+        # img.show()
+        s = pytesseract.image_to_string(img)
+        if "quit?" in s:
+            keyboard.type('\n')
+            time.sleep(0.1)
+            continue
+
+    
+            s = ''.join([x for x in s if x in string.printable])
+        all_s.append(s)
+    dick = {}
+    for s in all_s:
+        if s == "": continue
+        if s in dick.keys():
+            dick[s] += 1
+        else:
+            dick[s] = 1
+    if len(dick) == 0: continue
+    true_dick = {x:0 for x in dick.keys()}
+    for i in true_dick.keys():
+        words = i.split(' ')
+        for word in words:
+            true_dick[i] += int(d_spell.check(word))
+    best_i = -1
+    best_sum = -1
+    for i,value in true_dick.items():
+        if value > best_sum:
+            best_sum = value
+            best_i = i
+        if value == best_sum:
+            if dick[i] > dick[best_i]:
+                best_i = i
+    print(best_i)
+
+    # keyboard.type(best_i)
+
+    for c in best_i:
+        keyboard.press(c)
+        time.sleep(0.001)
+        keyboard.release(c)
