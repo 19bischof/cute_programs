@@ -1,7 +1,7 @@
 import os
 from colored import fg, bg, attr
 import time
-import keyboard
+from getch import Getch
 import cursor
 import textwrap
 textwrap.shorten
@@ -23,10 +23,9 @@ class i_menu:
         self.desc = desc
         self.choice = None
         self.selected = 0
+        self.getch = Getch()
+
         self.get_index = get_index
-        keyboard.add_hotkey('up', self.up)
-        keyboard.add_hotkey('down', self.down)
-        keyboard.add_hotkey('enter', self.enter)
         self.show_menu()
         self.loop()
         cursor.show()
@@ -47,15 +46,24 @@ class i_menu:
     #     else:
     #         self.option.insert(ind, option)
     #     self.show_menu()
-
     def loop(self):
         while self.choice is None:
-            try:
-                time.sleep(0.01)
-            except KeyboardInterrupt:
+            
+            # time.sleep(0.01)
+            ch = self.getch()
+            if ch == b'\x03':
                 cursor.show()
-                quit()
-        keyboard.remove_all_hotkeys()
+                quit() 
+            if ch == b'\x00' or ch == b'\xe0':
+                ch = self.getch()
+                if ch == b'P':
+                    self.down()
+                if ch == b'H':
+                    self.up()
+            if ch == b'\r':
+                self.enter()
+                print(self.choice)
+
 
     def enter(self):
         self.choice = self.selected
@@ -78,7 +86,7 @@ class i_menu:
             highlight = fg('white') + bg('deep_pink_4c')+ attr('underlined')
             pre = highlight if i == self.selected else ""
             print("{0}{1}".format(pre, self.options[i]) + attr('reset'))
-            if i == self.selected and self.desc:
+            if i == self.selected and self.desc[i]:
                 print(fg('green')+textwrap.shorten(self.desc[i],width)+attr('reset'))
 
 
