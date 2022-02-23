@@ -1,5 +1,6 @@
 import pygame
 import numpy
+
 def fade_me(size:tuple[int,int],start_color,end_color) -> pygame.Surface:
     """fills a Surface with a color_fade (top-bottom) from start_color to end_color
     :param start_color,end_color: an rgb tuple or color name or hash value
@@ -27,6 +28,7 @@ if __name__ == '__main__':
     size = (200,600)
     c_start = '#00FFFF'
     c_end = '#000000'
+    
     s = fade_me(size,c_start,c_end)
     pygame.init()
     window_screen = pygame.display.set_mode(size)

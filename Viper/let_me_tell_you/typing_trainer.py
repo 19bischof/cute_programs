@@ -107,7 +107,7 @@ def start_game(cutoff_points):
     # user character input starts here:
     wrong_input = 0
     start_time = 0
-    getch = Getch()
+    getch = Getch() #instancing
     while pointer < len(the_quote):
         sys.stdin.flush()
 
@@ -138,7 +138,9 @@ def start_game(cutoff_points):
 while 1:
     cutoff_points = []
     start_game(cutoff_points)
-    if input("\nquit? ").lower().strip() in ('quit', 'yes', 'y'):
+    try:
+        if input("\nquit? ").lower().strip() in ('quit', 'yes', 'y'):
+            break
+    except KeyboardInterrupt:
         break
-
 print("Thanks for playing!")

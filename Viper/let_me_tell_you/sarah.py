@@ -50,7 +50,7 @@ while 1:
             continue
 
     
-            s = ''.join([x for x in s if x in string.printable])
+        s = ''.join([x for x in s if x in string.printable])
         all_s.append(s)
     dick = {}
     for s in all_s:
@@ -79,6 +79,7 @@ while 1:
     # keyboard.type(best_i)
 
     for c in best_i:
+        if c == '\n': c = " "
         keyboard.press(c)
         time.sleep(0.001)
         keyboard.release(c)
