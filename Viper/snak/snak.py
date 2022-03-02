@@ -67,7 +67,6 @@ class snack:
         if isinstance(dir, str):
             dick = {"north": 0, "east": 1, "south": 2, "west": 3}
             dir = dick[dir]
-            print(dir)
         # if no buffered turns:
         if not self.turns:
             #cant go back:
