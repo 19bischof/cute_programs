@@ -29,7 +29,7 @@ def enum_cb(hwnd, results):
     winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
 win32gui.EnumWindows(enum_cb, toplist)
 
-firefox = [(hwnd, title) for hwnd, title in winlist if 'windows powershell' in title.lower()]
+firefox = [(hwnd, title) for hwnd, title in winlist if 'did i wake you? 💋' in title.lower()]
 # just grab the hwnd for first window matching firefox
 firefox = firefox[0]
 hwnd = firefox[0]

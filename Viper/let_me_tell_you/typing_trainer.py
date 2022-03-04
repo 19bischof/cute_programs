@@ -5,7 +5,12 @@ import pathlib
 from api_call2 import quotable_dot_io_api_call as q_io
 from api_call import quotes_dot_net_api_call as q_net
 from getch import Getch
-
+if os.name == 'nt':
+    import ctypes
+    ctypes.windll.kernel32.SetConsoleTitleW("Did I wake you? 💋")
+else:
+    sys.stdout.write('\33]0;' + "Did I wake you? 💋" + '\a')
+    sys.stdout.flush()
 red = "\033[91m"
 turquoise = "\033[36m"
 green = "\033[32m"
