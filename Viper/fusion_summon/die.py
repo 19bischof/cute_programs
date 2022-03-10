@@ -11,7 +11,7 @@ import requests
 import time
 import random
 
-with open("toppy.txt", "r") as f:
+with open("urls/toppy.txt", "r") as f:
     urls = f.read().split("\n")
     urls = urls * 3
 
@@ -31,7 +31,7 @@ def time_me(func):
             resps = func(*args, **kwargs)
         st = pstats.Stats(pr)  # create statistics from Profile
         st.sort_stats(pstats.SortKey.TIME)
-        st.dump_stats(func.__name__+".profiler")
+        st.dump_stats(".profiler/func.__name__+".profiler")
         hit = resps.count(True)
         note = "{}: {:.2f} seconds and {}% fidelity".format(
             func.__name__, time.perf_counter()-start_t, int(hit/len(urls)*100))

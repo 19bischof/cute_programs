@@ -2,13 +2,20 @@ import os
 import subprocess
 import time
 pees = []
-for file in os.listdir():
-    if not os.path.isfile(file):
+path = "./.profiler/"
+for file in os.listdir(path):
+    if not os.path.isfile(path+file):
         continue
     if not file.endswith(".profiler"):
         continue
-    pees.append(subprocess.Popen("snakeviz {}".format(file)))
+    pees.append(subprocess.Popen(["snakeviz",path+file]))
+    
 
-time.sleep(1)
-for p in pees:
-    p.terminate()
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt or SystemExit:
+    pass
+finally:
+    for p in pees:
+        p.terminate()
