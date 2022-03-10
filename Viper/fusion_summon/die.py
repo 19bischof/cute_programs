@@ -31,7 +31,7 @@ def time_me(func):
             resps = func(*args, **kwargs)
         st = pstats.Stats(pr)  # create statistics from Profile
         st.sort_stats(pstats.SortKey.TIME)
-        st.dump_stats(".profiler/func.__name__+".profiler")
+        st.dump_stats(".profiler/"+func.__name__+".profiler")
         hit = resps.count(True)
         note = "{}: {:.2f} seconds and {}% fidelity".format(
             func.__name__, time.perf_counter()-start_t, int(hit/len(urls)*100))
@@ -69,8 +69,6 @@ def traditional():
                 pass
     return [resp.ok for resp in resps]
 
-#TODO timeout isnt handled by fusion and maybe others
-#or in other words bad urls may lead to exception
 @time_me
 def fusion():
     "requests module with concurrent.future.ThreadPool"
@@ -80,7 +78,7 @@ def fusion():
         #compiling list of futures:
         with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
             list_of_futures = [executor.submit(
-                session.get(url, timeout=timeout), url) for url in urls]
+                session.get,url,timeout=timeout) for url in urls]
     # yields future when it completes:
     for future in concurrent.futures.as_completed(list_of_futures):
         try:
@@ -89,7 +87,6 @@ def fusion():
         except:
             resps.append(False)
     return resps
-
 
 @time_me
 def gregarious():
@@ -131,8 +128,15 @@ async def xtra_hot():
     return [bool(resp) for resp in resps]
 
 def print_result():
-	for note in time_me.notes:
-		print(note)
+    import re
+    dick = {}
+    for note in time_me.notes:
+        time_taken = re.findall("\d+\.\d+",note)[0]
+        name = re.findall("\w+:",note)[0]
+        dick.update({time_taken:name})
+    lick = sorted(dick,reverse=True) #list of keys
+    for key in lick:
+        print(f"{dick[key][:15]}".ljust(15) + f"{key}")
 		
 if __name__ == "__main__":
     traditional()
