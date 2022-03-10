@@ -11,8 +11,10 @@ import requests
 import time
 import random
 
-with open("urls.txt", "r") as f:
+with open("toppy.txt", "r") as f:
     urls = f.read().split("\n")
+    urls = urls * 3
+
 
 urls = random.sample(urls, 30)
 timeout = 3
@@ -25,7 +27,7 @@ def time_me(func):
     def wrapper(*args, **kwargs):
         start_t = time.perf_counter()
         print("{} is starting".format(func.__name__))
-        with cProfile.Profile() as pr:  # start Profiling the function
+        with cProfile.Profile() as pr:  # start Profiling 
             resps = func(*args, **kwargs)
         st = pstats.Stats(pr)  # create statistics from Profile
         st.sort_stats(pstats.SortKey.TIME)
@@ -48,9 +50,9 @@ def coro(func):
 
     if os.name == 'nt':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy()) 
-        #some issue with windows event loop; occured only in aiohttp module
+        #some issue with windows event loop; occured only in aiohttp module when using https
     def wrapper(*args, **kwargs):
-        return asyncio.run(func())
+        return asyncio.run(func(*args,**kwargs))
     wrapper.__name__ = func.__name__
     return wrapper
 
@@ -67,7 +69,8 @@ def traditional():
                 pass
     return [resp.ok for resp in resps]
 
-TODO timeout isnt handled by fusion and maybe others
+#TODO timeout isnt handled by fusion and maybe others
+#or in other words bad urls may lead to exception
 @time_me
 def fusion():
     "requests module with concurrent.future.ThreadPool"
@@ -127,10 +130,14 @@ async def xtra_hot():
 
     return [bool(resp) for resp in resps]
 
+def print_result():
+	for note in time_me.notes:
+		print(note)
+		
 if __name__ == "__main__":
     traditional()
     fusion()
     gregarious()
     xtra_hot()
     aeiou_http()
-    #program with sessions is faster which hasn't been implemented everywhere
+    print_result()
