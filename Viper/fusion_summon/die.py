@@ -29,12 +29,12 @@ def time_me(func):
         print("{} is starting".format(func.__name__))
         with cProfile.Profile() as pr:  # start Profiling 
             resps = func(*args, **kwargs)
+        note = "{}: {:.3f} seconds and {}% fidelity".format(
+            func.__name__, time.perf_counter()-start_t, int(hit/len(urls)*100))
         st = pstats.Stats(pr)  # create statistics from Profile
         st.sort_stats(pstats.SortKey.TIME)
-        st.dump_stats(".profiler/"+func.__name__+".profiler")
+        st.dump_stats("profiler/"+func.__name__+".profiler")
         hit = resps.count(True)
-        note = "{}: {:.2f} seconds and {}% fidelity".format(
-            func.__name__, time.perf_counter()-start_t, int(hit/len(urls)*100))
         print(note)
         time_me.notes.append(note)
         print("----------------timeout for 2 seconds----------------")

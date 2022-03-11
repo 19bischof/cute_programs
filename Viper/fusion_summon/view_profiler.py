@@ -2,7 +2,7 @@ import os
 import subprocess
 import time
 pees = []
-path = "./.profiler/"
+path = "./profiler/"
 for file in os.listdir(path):
     if not os.path.isfile(path+file):
         continue
