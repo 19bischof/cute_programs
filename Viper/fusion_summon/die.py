@@ -13,6 +13,8 @@ import time
 import random
 from url_valid import url_format
 
+if not os.path.exists("./profiler/"):
+    os.mkdir("./profiler/")
 
 with open("urls/urls.txt", "r") as f:
     urls = f.read().split("\n")
@@ -24,9 +26,9 @@ for u in urls[:]:
 urls = random.sample(urls, 200)
 print("number of urls:",len(urls))
 timeout = 3
-print_exceptions = True
-Red = '\u001b[31m'
-Reset = '\u001b[0m'
+#if request-exceptions should be printed (not working in traditional)
+print_exceptions = True 
+
 
 
 def from_status_code(losc):
@@ -34,6 +36,8 @@ def from_status_code(losc):
     return [code < 400 for code in losc if not isinstance(code,Exception)]
 
 def print_errors(resps):
+    Red = '\u001b[31m'
+    Reset = '\u001b[0m'
     if print_exceptions:
         for r in resps:
             if isinstance(r,Exception):
