@@ -1,5 +1,5 @@
 "Benchmark module to test different ways of fetching html"
-
+#Notice: with too many urls, the program may print errors, but the program will still run normally :)
 import os
 import cProfile  # Profiles the function call and times
 import pstats  # creates Statistics based on the Profile
@@ -13,12 +13,20 @@ import random
 
 with open("urls/toppy.txt", "r") as f:
     urls = f.read().split("\n")
-    urls = urls * 3
 
-
-urls = random.sample(urls, 30)
+# urls = random.sample(urls, 30)
+# urls = urls * 5
+print((urls))
+print(len(urls))
 timeout = 3
+print_exceptions = True
+Red = '\u001b[31m'
+Reset = '\u001b[0m'
 
+
+def from_status_code(losc):
+    "Decides if connection was succesful or not"
+    return [code < 400 for code in losc if not isinstance(code,Exception)]
 
 def time_me(func):
     "Benchmark Decorator"
@@ -29,21 +37,19 @@ def time_me(func):
         print("{} is starting".format(func.__name__))
         with cProfile.Profile() as pr:  # start Profiling 
             resps = func(*args, **kwargs)
-        note = "{}: {:.3f} seconds and {}% fidelity".format(
-            func.__name__, time.perf_counter()-start_t, int(hit/len(urls)*100))
+        hit = from_status_code(resps).count(True)
+        note = "{}: {:.3f} seconds and {:.2f}% fidelity".format(
+            func.__name__, time.perf_counter()-start_t, hit/len(urls)*100)
         st = pstats.Stats(pr)  # create statistics from Profile
         st.sort_stats(pstats.SortKey.TIME)
         st.dump_stats("profiler/"+func.__name__+".profiler")
-        hit = resps.count(True)
         print(note)
         time_me.notes.append(note)
         print("----------------timeout for 2 seconds----------------")
         time.sleep(2)
     return wrapper
 
-
 time_me.notes = []
-
 
 def coro(func):
     "Coroutine Decorator"
@@ -59,34 +65,33 @@ def coro(func):
 
 @time_me
 def traditional():
-    """uses normal requests module"""
+    """uses standard requests module"""
     resps = []
     with requests.Session() as session:
         for url in urls:
-            try:
+            try:    #try is important
                 resps.append(session.get(url, timeout=timeout))
             except:
                 pass
-    return [resp.ok for resp in resps]
+    return [r.status_code for r in resps]
 
 @time_me
 def fusion():
-    "requests module with concurrent.future.ThreadPool"
+    "uses requests module with concurrent.future.ThreadPool"
     import concurrent.futures
     resps = []
     with requests.Session() as session:
         #compiling list of futures:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=len(urls)) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=100) as executor:
             list_of_futures = [executor.submit(
                 session.get,url,timeout=timeout) for url in urls]
     # yields future when it completes:
     for future in concurrent.futures.as_completed(list_of_futures):
-        try:
-            data = future.result()  # returns response objects
-            resps.append(data.ok)
+        try: #try is important
+            resps.append(future.result())  # returns response objects
         except:
-            resps.append(False)
-    return resps
+            pass
+    return [r.status_code for r in resps]
 
 @time_me
 def gregarious():
@@ -94,38 +99,38 @@ def gregarious():
     with requests.Session() as session:
         reqs = (grequests.get(url, timeout=timeout,session=session) for url in urls)
         resps = grequests.map(reqs)
-    return [bool(resp) for resp in resps]
+    return [resp.status_code for resp in resps if isinstance(resp,requests.Response)]
 
+
+#may print unicode error: socket module cant stand when url name is too long or so
 @time_me
 @coro
 async def aeiou_http():
     "using the aiohttp module"
-
-    async def fetch(url, session):
-        async with session.get(url) as response:
-            return await response.read()
-
     async with aiohttp.ClientSession() as session:
+        tasks = (session.get(url,verify_ssl=False,timeout=timeout) for url in urls) #verify_ssl is important for: "https://cdc.gov"
         try:
-            tasks = (asyncio.ensure_future(fetch(url,session)) for url in urls)
-            resps = await asyncio.gather(*tasks)
+            resps = await asyncio.gather(*tasks,return_exceptions=True)
         except:
             pass
-    return [bool(resp) for resp in resps]
-
+    s = [r.status for r in resps if isinstance(r,aiohttp.ClientResponse)]
+    print(len(s))
+    if print_exceptions:
+        for r in resps:
+            if isinstance(r,Exception):
+                print(Red,(type(r),r),Reset)
+    return s
+    
 
 @time_me
 @coro
 async def xtra_hot():
     "using the httpx module"
-    async with httpx.AsyncClient() as client:
-        try:
-            tasks = (client.get(url) for url in urls)
-            resps = await asyncio.gather(*tasks)
-        except:
-            pass
-
-    return [bool(resp) for resp in resps]
+    limits = httpx.Limits() #making sure that there are no pool timeouts, because of the size of urls (occured with 1650)
+    async with httpx.AsyncClient(limits = limits) as client:
+        tasks = (asyncio.ensure_future(client.get(url,timeout=timeout)) for url in urls)
+        resps = await asyncio.gather(*tasks,return_exceptions=True)  
+    return [resp.status_code for resp in resps if isinstance(resp,httpx.Response)]
 
 def print_result():
     import re
@@ -133,15 +138,15 @@ def print_result():
     for note in time_me.notes:
         time_taken = re.findall("\d+\.\d+",note)[0]
         name = re.findall("\w+:",note)[0]
-        dick.update({time_taken:name})
+        dick.update({float(time_taken):name})
     lick = sorted(dick,reverse=True) #list of keys
     for key in lick:
         print(f"{dick[key][:15]}".ljust(15) + f"{key}")
 		
 if __name__ == "__main__":
-    traditional()
-    fusion()
-    gregarious()
+    # traditional()
+    # fusion()
+    # gregarious()
     xtra_hot()
     aeiou_http()
     print_result()
