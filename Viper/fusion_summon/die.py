@@ -10,20 +10,19 @@ import httpx
 import aiohttp
 import requests
 import time
-import random
 from url_valid import url_format
 
 if not os.path.exists("./profiler/"):
     os.mkdir("./profiler/")
 
-with open("urls/urls.txt", "r") as f:
+with open("urls/toppy.txt", "r") as f:
     urls = f.read().split("\n")
 for u in urls[:]:
     if not re.match(url_format,u):
         urls.remove(u)
         print("removed [{}]".format(u))
 
-urls = random.sample(urls, 200)
+# urls = random.sample(urls, 200)
 print("number of urls:",len(urls))
 timeout = 3
 #if request-exceptions should be printed (not working in traditional)
