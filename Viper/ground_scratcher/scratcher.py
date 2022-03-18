@@ -1,5 +1,6 @@
 #! usr/bin/python3.10
 import random
+import time
 import re
 from bs4 import BeautifulSoup
 import requests
@@ -19,7 +20,7 @@ class imagine:
 
     image_path = "images/"
     filter_path = "filter/"
-    json_path = filter_path+"route.json"
+    json_path = filter_path+"000.json"
 
     def __init__(self):
         if not os.path.exists(self.filter_path):
@@ -41,17 +42,6 @@ class imagine:
         with open(self.json_path, "w") as f:
             json.dump(self.full_path_json,f)
 
-    @classmethod
-    def save_full_from_filter(cls):
-        with open(cls.json_path, "r") as f:
-            dick = json.load(f)
-        for key, value in dick.items():
-            if not os.path.exists(cls.filter_path+key):
-                continue
-            resp = requests.get(value, stream=True)
-            ext = mimetypes.guess_extension(resp.headers['Content-Type'])
-            cls.write_image_from_resp(cls,cls.image_path+key+ext, resp)
-
     def write_image_from_resp(self, path, resp):
         with open(path, 'wb') as f:
             if not resp.ok:
@@ -61,23 +51,32 @@ class imagine:
                 f.write(chunk)
 
     def is_duplicate(self, name):
-        files = os.listdir(self.filter_path)
-        for file in files:
-            if file.startswith(name):
-                print("image already stored!")
-                return True
+        for file_path in (self.filter_path,self.image_path):
+            files = os.listdir(file_path)
+            for file in files:
+                if file.startswith(name):
+                    print("image already stored!")
+                    return True
         return False
 
 
 class scratcher:
     """parent class for scratching"""
 
-    def __init__(self, url):
-        self.browse(url)
+    def __init__(self, url,delay = 0):
+        self.browse(url,delay)
 
-    def browse(self, url):
-        self.soup = BeautifulSoup(
-            requests.get(url).text, 'html.parser')  # the soup
+    def browse(self, url,delay):
+        # req = requests.get(url,timeout=(3.05, 7))
+        import urllib.request
+        
+        with urllib.request.urlopen(url) as response:
+
+            html = response.read().decode('utf-8')
+        # time.sleep(delay)
+
+        self.soup = BeautifulSoup(html, 'html.parser')  # the soup
+        # print(self.soup.prettify())
         self.data = {}  # the extracted data
 
     def parse(self):
@@ -107,16 +106,26 @@ class chick(scratcher):
             self.data[key] = val.get_text()[slice:]
 
 
+class chain(scratcher):
+    url = "https://www.blockchain.com/prices/BTC"
+
+    def __init__(self):
+        super().__init__(self.url,5)
+        self.parse()
+    def parse(self):
+        elem = self.soup.select_one("span.iTPDUE")
+        print(elem)
+        self.data['Bitcoin in US'] = elem.get_text()
 class unsplash(scratcher, imagine):
     """scratcher for unslpash.com"""
     # The soup select syntax was chosen on march 9nth for /backgrounds/nature
     # TODO: look at the following link yo https://unsplash.com/napi/landing_pages/backgrounds/desktop?page=2&per_page=20
     # its crazy they just give you the data in json format so yeah you can definetely improve the scraping process and simplify iter
     # do that tomorrow good day :) love you
-    url = "https://unsplash.com/backgrounds/nature"
+    url = "https://unsplash.com/wallpapers/colors"
 
     def __init__(self):
-        super().__init__(self.url)  # left to right super() parent unless incest
+        super().__init__(self.url)
         imagine.__init__(self)
         self.parse()
 
@@ -159,38 +168,42 @@ class unsplash(scratcher, imagine):
 
 
 class napi_unsplash(scratcher, imagine):
-    url = "https://unsplash.com/napi/landing_pages/backgrounds/desktop?page={page}&per_page={per_page}"
+    url = "https://unsplash.com/napi/landing_pages/wallpapers?page={page}&per_page={per_page}"
 
-    def __init__(self):
+    def __init__(self,page=1):
+        self.page, self.per_page = page, 30
         scratcher.__init__(self,self.url)
         imagine.__init__(self)
         self.browse()
         self.parse()
 
-    def browse(self, page=1, per_page=30):
-        self.page, self.per_page = page, per_page
+    def browse(self,trash=90):
         self.json_resp = requests.get(self.url.format(
             **{"page": self.page, "per_page": self.per_page})).json()
 
     def parse(self):
         photos = self.json_resp['photos']
-        number = random.randrange(self.per_page)
-        try:
-            self.save(photos[number]['urls']['full'],
-                      photos[number]['alt_description'])
-        except Exception as e:
-            print(photos[number])
-            raise e
+        for i in range(self.per_page):
+            try:
+                name = photos[i]['id']
+                if photos[i]['alt_description']:
+                    name = photos[i]['alt_description']
+                print(name)
+                self.preview_to_filter(photos[i]['urls']['small'],name,photos[i]['urls']['full'])
+            except Exception as e:
+                print(photos[i])
+                raise e
 
 
 if __name__ == "__main__":
     # print(chick())
     import time
     # unsplash()
-    imagine.save_full_from_filter()
+    # napi_unsplash(3)
     # for i in range(20):
     #     napi_unsplash()
     #     time.sleep(5)
+    print(chain())
     # print(un)
     # url = 'https://images.unsplash.com/photo-1539200831626-cad7f58c765f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTl8fHxlbnwwfHx8fA%3D%3D&auto=format&fit=crop&w=2592&q=60'
     # imagine.save(None,url,"hey")
