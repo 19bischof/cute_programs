@@ -5,6 +5,7 @@ import pathlib
 from api_call2 import quotable_dot_io_api_call as q_io
 from api_call import quotes_dot_net_api_call as q_net
 from getch import Getch
+from list_of_praises import lop
 if os.name == 'nt':
     import ctypes
     ctypes.windll.kernel32.SetConsoleTitleW("Did I wake you? 💋")
@@ -140,6 +141,7 @@ def start_game(cutoff_points):
         ((len(the_quote) / (len(the_quote) + wrong_input)) * 100).__format__(".2f")
         + "%",
     )
+    print("Judgement: " + random.choice(lop)+"!")
     save_quote(the_quote_data)
 
 
@@ -147,8 +149,8 @@ while 1:
     cutoff_points = []
     start_game(cutoff_points)
     try:
-        if input("\nquit? ").lower().strip() in ("quit", "q", "yes", "y", "exit"):
+        if input("quit?\n").lower().strip() in ("quit", "q", "yes", "y", "exit"):
             break
     except KeyboardInterrupt:
         break
-print("Thanks for playing!")
+print("I'm a game and you're a player 💋!")
