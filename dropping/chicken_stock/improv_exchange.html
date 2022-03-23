@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Exchange</title>
+</head>
+<body>
+    <h2>ICOIN exchange</h2>
+    <span>ICOIN: <b id="value">123</b></span>
+</body>
+<script>
+    el = document.getElementById("value")
+    el.onchange = () => console.log("fuck you and you time and your sister and your fun")
+    function change(){
+        el.innerHTML = (parseInt(el.innerHTML) + Math.random()*3 + parseInt(el.innerHTML) * (Math.random()*0.2 - 0.1)).toFixed(2)
+    }
+    setInterval(change,1000)
+    
+</script>
+</html>
