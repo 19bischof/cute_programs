@@ -85,7 +85,7 @@ def save_quote(quote_dict):
         if file_json.get(hash_v) == None:
             with open(json_file_path, "w") as file_w:
                 file_json[hash_v] = quote_dict
-                json.dump(file_json, file_w)
+                json.dump(file_json, file_w,indent=4)
 
 
 def start_game(cutoff_points):
