@@ -141,7 +141,8 @@ def start_game(cutoff_points):
         ((len(the_quote) / (len(the_quote) + wrong_input)) * 100).__format__(".2f")
         + "%",
     )
-    print("Judgement: " + random.choice(lop)+"!")
+    praise = random.choice(lop)
+    print("Assessment: " + praise + ("" if praise.endswith("!") else "!"))
     save_quote(the_quote_data)
 
 
