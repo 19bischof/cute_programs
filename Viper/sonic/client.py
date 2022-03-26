@@ -27,6 +27,8 @@ with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as sock:
         try:
             data = sock.recv(cg.chunk_size)
         except TimeoutError:
+            if time.perf_counter() - start_t < cg.duration:
+                continue
             end_t = time.perf_counter() - cg.timeout
             break
         cur_count += 1

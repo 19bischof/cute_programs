@@ -3,7 +3,7 @@ import pathlib
 
 chunk_size = 1024 * 8
 duration = 10
-timeout = 1
+timeout = 0.5
 root_path = pathlib.Path(__file__).parent.as_posix()
 with open(root_path + "/address.json", "r") as f:  # implement address.json locally
     dick = json.load(f)

@@ -16,6 +16,7 @@ def send_dgrams( client_address):
                 sock.sendto(data,client_address)
             except ConnectionResetError:
                 logging.error(f"Connection with {client_address} was closed")
+                print("hello")
                 return
         logging.info(f"finished sending to {client_address}...")
 
@@ -30,6 +31,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
         except TimeoutError:
             continue
         logging.info(f"sending to {client_address}...")
-        start_new_thread(target=send_dgrams,args=[client_address])
+        start_new_thread(send_dgrams,(client_address,))
 
         
