@@ -18,7 +18,7 @@ def send_dgrams(sock, client_address):
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
     sock.bind(cg.server_address)
     sock.settimeout(cg.timeout)
-    logging.info("initialized socket...")
+    logging.info(f"initialized socket on {cg.server_address}...")
     while True:
         try:
             data,client_address = sock.recvfrom(1024)
