@@ -11,7 +11,11 @@ def send_dgrams(sock, client_address):
     data = bytes([0xFF for _ in range(cg.chunk_size)])
     start_t = time.perf_counter()
     while time.perf_counter() - start_t < cg.duration:
-        sock.sendto(data,client_address)
+        try:
+            sock.sendto(data,client_address)
+        except ConnectionResetError:
+            logging.error(f"Connection with {client_address} was closed")
+            return
     logging.info(f"finished sending to {client_address}...")
 
 

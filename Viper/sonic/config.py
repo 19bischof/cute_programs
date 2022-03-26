@@ -1,9 +1,11 @@
 import json
+import pathlib
+
 chunk_size = 1024 * 8
 duration = 10
 timeout = 1
-
-with open("address.json", "r") as f:  # implement address.json locally
+root_path = pathlib.Path(__file__).parent.as_posix()
+with open(root_path + "/address.json", "r") as f:  # implement address.json locally
     dick = json.load(f)
 server_address = (dick["server_address"], dick["server_port"])
 client_address = (dick["client_address"], dick["client_port"])
