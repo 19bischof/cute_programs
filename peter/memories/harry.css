@@ -1,0 +1,33 @@
+grid-container{
+    left:20%;
+    top: 10%;
+    position:relative;
+    display:grid;
+    width: 40%;
+    height: 70vh;
+    border: 1px ;
+    border-style: groove;
+    grid-template: repeat(6, 1fr) / repeat(4,1fr);
+    grid-auto-flow:column;
+    grid-column-gap: 200 px;
+    
+}
+grid-item:hover{
+    opacity: 1;
+    background-color: orangered;
+}
+grid-item:active{
+    background-color:crimson;
+}
+grid-item{
+    border: 1px dashed;
+    background-color: teal;
+    width:100%;
+    /* opacity: 0; */
+    height:100%;
+    user-select: none;
+    box-sizing:border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
