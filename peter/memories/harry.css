@@ -8,8 +8,8 @@ grid-container{
     border: 1px ;
     border-style: groove;
     grid-template: repeat(6, 1fr) / repeat(4,1fr);
-    grid-auto-flow:column;
-    grid-column-gap: 200 px;
+    grid-auto-flow:row;
+    /* grid-column-gap: 200 px; */
     
 }
 grid-item:hover{
@@ -21,8 +21,11 @@ grid-item:active{
 }
 grid-item{
     border: 1px dashed;
+    font-family: serif;
+    font-size: x-large;
     background-color: teal;
-    width:100%;
+    width:100px;
+    height: 100px;
     /* opacity: 0; */
     height:100%;
     user-select: none;
