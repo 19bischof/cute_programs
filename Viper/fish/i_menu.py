@@ -23,6 +23,7 @@ class i_menu:
         self.selected = [ None for _ in range(len(self.options))]
         self.getch = Getch()
         self.result = ""
+        self.last_height = 0
         # cursor.show()
 
     def loop(self):
@@ -84,9 +85,11 @@ class i_menu:
 
     def show_menu(self):
         width,height = os.get_terminal_size()
-        for i in range(len(self.options[self.cur_page])+4):    
+        for i in range(self.last_height):    #clear last screen 
             print(up + " "*(width)+'\r', end="",flush=False)
-        print(textwrap.shorten(self.desc[self.cur_page],width)) #print question
+        self.last_height = 0
+        self.last_height += len(textwrap.wrap(out := self.desc[self.cur_page],width)) # incrementing by height of print output
+        print(out) #print question
         for i in range(len(self.options[self.cur_page])):
             cur_text = self.options[self.cur_page][i]
             percent = self.distros[self.cur_page][cur_text]
@@ -97,8 +100,10 @@ class i_menu:
             pre = highlight if i == self.cur_hover else ""
             pre += active if cur_text == self.selected[self.cur_page] else ""
             pre += bg('dark_red_2') if cur_text == self.selected[self.cur_page] and i == self.cur_hover else ""
-            print("- {0}{1} {2}{3}".format(pre, cur_text,green,percent) + attr('reset'))
-        print(yellow,self.result,attr('reset'))
+            self.last_height += len(textwrap.wrap(out := "- {0}{1} {2}{3}".format(pre, cur_text,green,percent) + attr('reset'),width))
+            print(out)
+        self.last_height += len(textwrap.wrap(out := yellow + self.result + attr('reset'),width))
+        print(out)
 
 
 

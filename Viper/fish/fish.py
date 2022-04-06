@@ -2,8 +2,13 @@ import csv
 from i_menu import i_menu
 
 rows = []
-with open("fish.csv", encoding="utf-8") as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',')
+try:
+    csv_file_handle = open("fish.csv", encoding="utf-8")
+except FileNotFoundError:
+    print("No 'fish.csv' file in directory!")
+    quit()
+with csv_file_handle:
+    csv_reader = csv.reader(csv_file_handle, delimiter=',')
     col_i = 0
     for row in csv_reader:
         if col_i == 0:
@@ -14,9 +19,7 @@ with open("fish.csv", encoding="utf-8") as csv_file:
                 if not cell:
                     cell = ""
             rows.append(row)
-            # print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
             col_i += 1
-    print(f'Processed {col_i} lines.')
 for i in range(len(rows)):
     rows[i].pop(0)
 column_heads.pop(0)
@@ -26,7 +29,6 @@ for col_i in range(len(rows[0])):
     for row_i in range(len(rows)):
         if not rows[row_i][col_i] in column_values[col_i]:
             column_values[col_i].append(rows[row_i][col_i])
-
 
 
 def filter(chosen):
@@ -47,7 +49,6 @@ def filter(chosen):
 
 
 def get_distribution(chosen):
-    print(chosen)
     # quit()
     for (real, possible) in zip(chosen, column_values):
         if real:
