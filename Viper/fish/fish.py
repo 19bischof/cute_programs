@@ -7,11 +7,7 @@ rows = []
 try:
     csv_file_handle = open("fish.csv", encoding="utf-8")
 except FileNotFoundError:
-<<<<<<< Updated upstream
-    print("No 'fish.csv' file in directory!")
-=======
     print(red+"ERROR: "+ reset + "No 'fish.csv' file in directory!")
->>>>>>> Stashed changes
     quit()
 with csv_file_handle:
     csv_reader = csv.reader(csv_file_handle, delimiter=',')
