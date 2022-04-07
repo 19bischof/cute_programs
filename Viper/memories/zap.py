@@ -9,7 +9,7 @@ green = colored.fg("green")
 blue = colored.fg("blue")
 red = colored.fg("red")
 reset = colored.attr("reset")
-width, height = 3,4
+width, height = 4,4
 abc = "abcdefghijklmnopqrstuvwxyz"
 dig = "123456789"
 if width > 26 or height > 9 or (width*height) % 2:
@@ -73,7 +73,7 @@ def game_loop():
         time.sleep(1)
         if len(words_already_found) == width * height:
             break
-    print(green+"You made it!")
+    print(green+"You made it!" + reset)
 
 
 if __name__ == "__main__":

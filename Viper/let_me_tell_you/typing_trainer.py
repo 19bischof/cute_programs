@@ -36,9 +36,12 @@ def get_new_quote():
         time.sleep(0.5)
         print("Loading quote from storage...")
         time.sleep(1)
-        with open(json_file_path, "r") as file_r:
-            file_json = json.loads(file_r.read())
-            # input("number of quotes in local file:" + str(len(list(file_json.keys()))))  #lists the number of quotes in quotes.json
+        with open(json_file_path, "w+") as f:
+            try:
+                file_json = json.load(f)
+            except json.JSONDecodeError:
+                print("Couldn't load from storage!")
+                quit()
             if len(file_json):
                 quote_dict = file_json[
                     list(file_json.keys())[random.randint(0, len(file_json) - 1)]
@@ -80,12 +83,15 @@ def line_breaker(the_quote, width, cutoff_points):
 
 def save_quote(quote_dict):
     hash_v = hashlib.sha256(quote_dict["content"].encode("utf-8")).hexdigest()[:16]
-    with open(json_file_path, "r") as file_r:
-        file_json = json.loads(file_r.read())
+    with open(json_file_path, "w+") as f:
+        try:
+            file_json = json.load(f)
+        except json.JSONDecodeError:
+            file_json = {}
         if file_json.get(hash_v) == None:
-            with open(json_file_path, "w") as file_w:
-                file_json[hash_v] = quote_dict
-                json.dump(file_json, file_w,indent=4)
+            file_json[hash_v] = quote_dict
+            json.dump(file_json, f,indent=4)
+            
 
 
 def start_game(cutoff_points):
