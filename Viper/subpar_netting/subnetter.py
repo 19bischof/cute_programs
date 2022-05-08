@@ -45,7 +45,7 @@ class subnetter:
                 print("bad subnetmask")
                 return
             mask = int(numb)
-        if mask not in range(31):  # allows for 0 - 30 as subnetmasks
+        if mask not in range(32):  # allows for 0 - 31 as subnetmasks
             print("bad subnetmask")
             return
         self.subnetmask_in_slash = mask
