@@ -14,7 +14,7 @@ client_address = (dick["client_address"], dick["client_port"])
 # like so
 # {
 #     "server_address": "192.168.n.n",
-#     "server_port": 5556,
+#     "server_port": 44412,
 #     "client_address": "192.168.n.n",
-#     "client_port" : 5557
+#     "client_port" : 44413
 # }
