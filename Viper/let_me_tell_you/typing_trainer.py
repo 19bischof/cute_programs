@@ -148,7 +148,7 @@ def start_game(cutoff_points):
         + "%",
     )
     praise = random.choice(lop)
-    print("Assessment: " + praise + ("" if praise.endswith("!") else "!"))
+    print("Comment: " + praise + ("" if praise.endswith("!") else "!"))
     save_quote(the_quote_data)
 
 
