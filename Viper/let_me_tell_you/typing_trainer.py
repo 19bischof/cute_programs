@@ -83,14 +83,14 @@ def line_breaker(the_quote, width, cutoff_points):
 
 def save_quote(quote_dict):
     hash_v = hashlib.sha256(quote_dict["content"].encode("utf-8")).hexdigest()[:16]
-    with open(json_file_path, "w+") as f:
+    with open(json_file_path, "r") as f:
         try:
             file_json = json.load(f)
         except json.JSONDecodeError:
             file_json = {}
-        if file_json.get(hash_v) == None:
-            file_json[hash_v] = quote_dict
-            json.dump(file_json, f,indent=4)
+    with open(json_file_path,'w') as f:
+        file_json[hash_v] = quote_dict
+        json.dump(file_json, f,indent=4)
             
 
 
@@ -137,8 +137,7 @@ def start_game(cutoff_points):
             os.system("cls" if os.name == "nt" else "clear")
             quit()
 
-    print()
-    print("Quote by: {author}".format(author=the_quote_data["author"]))
+    print("\nQuote by: {author}".format(author=the_quote_data["author"]))
     # 5 characters are a word
     wpm = len(the_quote) / 5 / ((time.time() - start_time) / 60)
     print("wpm:", wpm.__format__(".2f"))
