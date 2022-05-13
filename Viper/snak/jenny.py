@@ -17,15 +17,16 @@ def snake_logic():
             skip += 1
     skip -= 1
 
-for i in tqdm.tqdm(range(2000)):
-    snake = snak.snack()
-    while snake.state == 1:
-        snake.move()
-        snake_logic()
-    if snake.state != 2:
-        raise RuntimeError
-print("You have a score of {}".format(snake.score))
-print(f'You have {("lost","error","won")[snake.state]} the game')
-# snake = snak.snack()
-# guy.new_snack(snake,snake_logic)
-# guy.loopy(fps=60)
+# for i in tqdm.tqdm(range(2000)):
+#     snake = snak.snack()
+#     while snake.state == 1:
+#         snake.move()
+#         snake_logic()
+#     if snake.state != 2:
+#         raise RuntimeError
+# print("You have a score of {}".format(snake.score))
+# print(f'You have {("lost","error","won")[snake.state]} the game')
+
+snake = snak.snack()
+guy.new_snack(snake,snake_logic)
+guy.loopy(fps=60)
