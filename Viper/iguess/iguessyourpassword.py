@@ -2,9 +2,19 @@
 -> implemented are pure numbers (without leading zero) and the other one is from a pool of possible characters"""
 import datetime
 import time
+import os
 passw = input("Please put in your password!\n")
-extended_pool = "123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0"
+extended_pool = "0123456789abcdefghijklmnopqrstuvwxyz"
 pool = "abcdefghijklmnopqrstuvwxyz"
+
+def guess_from_dick(p):
+    if not os.path.exists("./fat_words.txt"):
+        print("Dictionary not found in root!")
+        return False
+    with open("fat_words.txt","r") as f:
+        words = f.read().splitlines()
+        if p in words:
+            return True
 
 def guess_from_int(p):
     """Guesses numbers with no leading zeros"""
@@ -59,28 +69,33 @@ def give_estimation_from_pool():
     return (time.perf_counter() - start_t) / (len(pool) ** nop)
 
 if __name__ == "__main__":
+    found = False
+    start_t = time.perf_counter()  
     try:
         new_passw = int(passw)
         if str(new_passw) != passw:
             raise ValueError
         passw = new_passw
         a_number = True
-        print("-> guess_from_int")
+        print("-> Brute Force from Numbers")
     except ValueError:
         a_number = False
-        print("-> guess_from_pool")
-        for c in passw:
-            if c not in pool:
-                pool = extended_pool
-                print("-> extended_pool")
-    if a_number:
-        print(f"ETA: {(t_delta := give_estimation_from_int()* passw):.6f} seconds | {datetime.timedelta(seconds=t_delta)}")
-        start_t = time.perf_counter()  
-        p_found = guess_from_int(passw)     
-    else:
-        print(f"ETA: {(t_delta := give_estimation_from_pool() * (len(pool)**len(passw))):.3f} seconds | {datetime.timedelta(seconds=t_delta)}")
-        start_t = time.perf_counter()  
-        p_found = guess_from_pool(passw)
+        print("-> guess from Dictionary")
+        if guess_from_dick(passw):
+            print("Found in Dictionary!")
+            found = True
+        else:
+            print("-> Brute Force from pool")
+            for c in passw:
+                if c not in pool:
+                    pool = extended_pool
+                    print("-> extended_pool")
+    if not found:
+        if a_number:
+            print(f"ETA: {(t_delta := give_estimation_from_int()* passw):.6f} seconds | {datetime.timedelta(seconds=t_delta)}")
+            guess_from_int(passw)     #brute forcing
+        else:
+            print(f"ETA: {(t_delta := give_estimation_from_pool() * (len(pool)**len(passw))):.3f} seconds | {datetime.timedelta(seconds=t_delta)}")
+            guess_from_pool(passw)    #brute forcing
 
-    print(f"Your password is {p_found}")
     print(f"It took {(t_delta := time.perf_counter() - start_t) :.6f} seconds | | {datetime.timedelta(seconds=t_delta)}")
