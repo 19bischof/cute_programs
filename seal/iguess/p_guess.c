@@ -4,7 +4,6 @@
 #include <math.h>
 #include <windows.h>
 
-
 #define max_arr_length 200
 
 void *char_to_pool_index(char[], int[]);
@@ -17,14 +16,15 @@ void estimate_small_abc(int);
 int guess_small_word(char[]);
 void clear();
 
-void clear(){
-    #if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
-        system("clear");
-    #endif
+void clear()
+{
+#if defined(__linux__) || defined(__unix__) || defined(__APPLE__)
+    system("clear");
+#endif
 
-    #if defined(_WIN32) || defined(_WIN64)
-        system("cls");
-    #endif
+#if defined(_WIN32) || defined(_WIN64)
+    system("cls");
+#endif
 }
 
 void *char_to_pool_index(char the_string[], int *point)
@@ -138,7 +138,13 @@ int guess_small_words(char passw[])
     FILE *f;
     char word[max_arr_length];
     f = fopen("./fat_words.txt", "r");
-    printf("-> Dictionary");
+    printf("-> Dictionary ");
+    if (f == NULL)
+    {
+        printf("{NO DICTIONARY FOUND}\n");
+        guess_small_abc(passw, 1);
+        return 0;
+    }
     while (strcmp(passw, word))
     {
         if (fscanf(f, "%s", word) == EOF)
