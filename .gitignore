@@ -10,3 +10,4 @@ output
 .idea
 .vscode
 *.log
+fat_*
