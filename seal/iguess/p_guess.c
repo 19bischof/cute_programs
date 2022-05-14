@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <math.h>
 #include <windows.h>
+#include "dick_search.h"
 
 #define max_arr_length 200
 
@@ -136,8 +137,9 @@ int guess_small_abc(char passw[], int estimate)
 int guess_small_words(char passw[])
 {
     FILE *f;
+    char path[] = "./fat_words.txt";
     char word[max_arr_length];
-    f = fopen("./fat_words.txt", "r");
+    f = fopen(path, "r");
     printf("-> Dictionary ");
     if (f == NULL)
     {
@@ -145,17 +147,15 @@ int guess_small_words(char passw[])
         guess_small_abc(passw, 1);
         return 0;
     }
-    while (strcmp(passw, word))
+    fclose(f);
+    if (!word_in_dictionary_file(passw, path))
     {
-        if (fscanf(f, "%s", word) == EOF)
-        {
-            fclose(f);
-            printf(" {NOT FOUND}\n");
-            guess_small_abc(passw, 1);
-            return 0;
-        }
+        printf(" {NOT FOUND}\n");
+        guess_small_abc(passw, 1);
+        return 0;
     }
-    printf("\nThe word is %s\n", word);
+
+    printf("\nThe word is %s\n", passw);
     fclose(f);
 }
 int main(int argc, char const *argv[])
