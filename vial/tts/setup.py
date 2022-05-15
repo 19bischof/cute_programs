@@ -1,6 +1,6 @@
 from setuptools import setup,Extension
 
-module = Extension("tits",sources=["tts.c"])
+module = Extension("tts_mom",sources=["tts.c"])
 
 setup(name="dong",
 version="1.0",

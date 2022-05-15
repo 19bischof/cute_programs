@@ -12,9 +12,9 @@ static PyObject *tts(PyObject *self, PyObject *args)
     if (!strcmp(the_text, "text"))
     {
         printf("to\n");
-        return PyUnicode_AsASCIIString("helloworld");
+        return PyBytes_FromString("don't pick up the phone, drunk and alone");
     }
-    return PyUnicode_AsASCIIString("nothingatall");
+    return PyLong_FromLong(0);
 }
 
 static PyMethodDef tts_methods[] = {
