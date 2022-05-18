@@ -124,9 +124,9 @@ def start_game(cutoff_points):
         sys.stdin.flush()
 
         key = getch()
-        if not start_time:
-            start_time = time.time()
         if key == bytes(the_quote[pointer], "utf-8"):  # if correct chararcter input
+            if not start_time:                          #starts time only when correct first character correct
+                start_time = time.perf_counter()
             print(turquoise + the_quote[pointer] + white, end="", flush=True)
             if pointer in cutoff_points:
                 print(down + "\r", end="", flush=True)
@@ -139,7 +139,7 @@ def start_game(cutoff_points):
 
     print("\nQuote by: {author}".format(author=the_quote_data["author"]))
     # 5 characters are a word
-    wpm = len(the_quote) / 5 / ((time.time() - start_time) / 60)
+    wpm = (len(the_quote)-1) / 5 / ((time.perf_counter() - start_time) / 60)
     print("wpm:", wpm.__format__(".2f"))
     print(
         "accuracy:",
