@@ -4169,7 +4169,6 @@
             "wisdom"
         ]
     },
-<<<<<<< Updated upstream
     "242e2ae1b8fa902f": {
         "content": "Human beings, who are almost unique in having the ability to learn from the experience of others, are also remarkable for their apparent disinclination to do so.",
         "author": "Douglas Adams",
@@ -4177,16 +4176,27 @@
             "famous-quotes"
         ]
     },
-    "5d9b5b0dbdb3a46c": {
-        "content": "No one saves us but ourselves. No one can and no one may. We ourselves must walk the path.",
-        "author": "Buddha",
-=======
     "5426256f9247406f": {
         "content": "Bad things are not the worst things that can happen to us. Nothing is the worst thing that can happen to us!",
         "author": "Richard Bach",
->>>>>>> Stashed changes
         "tags": [
             "famous-quotes"
+        ]
+    },
+    "a48314b3d1867480": {
+        "content": "Always seek out the seed of triumph in every adversity.",
+        "author": "Og Mandino",
+        "tags": [
+            "famous-quotes",
+            "wisdom"
+        ]
+    },
+    "bd8d2acaca5dae28": {
+        "content": "There is nothing on this earth more to be prized than true friendship.",
+        "author": "Thomas Aquinas",
+        "tags": [
+            "famous-quotes",
+            "friendship"
         ]
     }
 }
