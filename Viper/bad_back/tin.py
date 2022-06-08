@@ -1,4 +1,5 @@
 import tkinter as tk
+from infi.systray import SysTrayIcon
 import random
 from sys import getsizeof
 
@@ -37,9 +38,23 @@ class lolipop(tk.Toplevel):
         x, y = random.randrange(ws-width), random.randrange(hs-height)
         self.geometry(f'{width}x{height}+{x}+{y}')
 
+    @staticmethod
+    def full_break(cls,*args):
+        # lolipop.root.destroy()
+        # lolipop.quit()
+        # lolipop.systray.shutdown()
+        import os
+        pid = os.getpid()
+        print(pid)
+        os.system(f'taskkill -f /pid {pid}')
+        
+    menu_options = (("IT'S SAFE HERE, QUICK!!",None,full_break),)
+    systray = SysTrayIcon("./ALARM.ico","COME HERE!!",menu_options)
+
 
 def main():
     lolipop()
+    lolipop.systray.start()
     lolipop.root.mainloop()
 
 
