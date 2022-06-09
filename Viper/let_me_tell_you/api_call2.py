@@ -10,7 +10,10 @@ class quotable_dot_io_api_call:
     url = 'https://quotable.io/random'+id+tags
 
     def get():
-        response = requests.get(quotable_dot_io_api_call.url)
+        try:
+            response = requests.get(quotable_dot_io_api_call.url)
+        except:
+            return None
         if (response.status_code == 200):
             json_quote = response.json()
             return {'content': json_quote['content'],'author' : json_quote['author'], 'tags' : json_quote['tags']}
