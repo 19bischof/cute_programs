@@ -35,7 +35,7 @@ class i_menu:
             if ch == b'\x03':
                 # cursor.show()
                 quit() 
-            if ch == b'\x1b':
+            elif ch == b'\x1b':
                 if self.getch() == b'[':
                     match self.getch():
                         case b'A': self.up()
@@ -48,7 +48,7 @@ class i_menu:
                     case b'P': self.down()
                     case b'M': self.right()
                     case b'K': self.left()                       
-            if ch == b'\r':
+            elif ch == b'\r':
                 self.enter()
         self.show_menu()
         return self.selected                
