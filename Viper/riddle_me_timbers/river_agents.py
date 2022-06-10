@@ -6,12 +6,20 @@ but it's only big enough to hold two of them at one time. The catch? None of the
 with any other agents if they're not there as well. They don't trust that the other agents won't try to poach their star.
 For example, Chloe's agent is okay if Chloe and Lexa are alone in the boat or on one of the riverbanks, but definitely not okay
 if Lexa's agent is also with them. So how can they all get across the river?
+
+agents = 'abc'
+stars = 'ABC'
+The Agent of 'B' is 'b'
 """
 
 init_pool = "abcABC"
 init_left_side = "abcABC"
 init_right_side = ""
 next_side = {"left": "right", "right": "left"}
+
+red = "\033[31m"
+white = "\033[37m"
+blue = "\033[34m"
 
 
 def order_str(s):
@@ -31,14 +39,14 @@ assert order_str("BAcCba") == "abcABC"
 
 def add_to_str(s, c):
     assert len(c) in (1, 2)
-    return order_str(s + c)
+    return s + c
 
 
 def remove_from_str(s, c):
     assert len(s) >= len(c)
     for one_c in c:
         s = s.replace(one_c, '')
-    return order_str(s)
+    return s
 
 
 def find_permutations_from_pool(pool):
@@ -50,7 +58,7 @@ def find_permutations_from_pool(pool):
 
 
 assert add_to_str("abc", 'A') == "abcA"
-assert add_to_str("aB", 'bC') == "abBC"
+assert add_to_str("aB", 'bC') == "aBbC"
 assert add_to_str("", "aC") == "aC"
 assert remove_from_str("ABC", "A") == "BC"
 assert remove_from_str("abBC", "aC") == "bB"
@@ -115,8 +123,16 @@ assert done("", "acBACb") == True
 assert done("c", "abBAC") == False
 
 
-def next_move(left_side, right_side, side, last):
+def print_state(left, right, last, depth):
+    for side in (order_str(left), ":", order_str(right)):
+        for c in side:
+            print(blue if c == last else ""+c, end=white)
+    print(red, depth, white)
 
+
+def next_move(left_side, right_side, side, last, depth, depth_limit=100, out=True):
+    if depth == depth_limit:  # set limit to prevent endless loop and go through all permutations before depth 100
+        return
     assert side in ("left", "right")
     assert len(last) in (1, 2)
     for c in last:
@@ -125,9 +141,10 @@ def next_move(left_side, right_side, side, last):
     for c in "abcABC":
         assert c in left_side+right_side
 
+    if out:
+        print_state(left_side, right_side, last, depth)
     if done(left_side, right_side):
-        print("it's been done nice")
-        quit()
+        return True
 
     agent_alone_on_side(left_side, right_side)
 
@@ -135,24 +152,36 @@ def next_move(left_side, right_side, side, last):
         current = left_side
     else:
         current = right_side
-    permut_pool = remove_from_str(current, last)
-    permuts = find_permutations_from_pool(permut_pool)
-    for perm in permuts:
+    permut_pool = find_permutations_from_pool(current)
+    permut_pool.remove(last)
+    for perm in permut_pool:
         if agent_alone_on_boat(perm):
             continue
         if side == "left":
             new_left = remove_from_str(left_side, perm)
             new_right = add_to_str(right_side, perm)
-            if agent_alone_on_side(new_left,new_right):
-                continue
-            next_move(new_left,new_right,"right",perm)
         else:
             new_left = add_to_str(left_side, perm)
             new_right = remove_from_str(right_side, perm)
-            if agent_alone_on_side(new_left,new_right):
-                continue
-            next_move(new_left,new_right,"left",perm)
+
+        if agent_alone_on_side(new_left, new_right):
+            continue
+        if next_move(new_left, new_right, next_side[side], perm, depth+1, depth_limit=depth_limit, out=out):
+            return True
+        if out:
+            print_state(left_side, right_side, last, depth)
+
 
 if __name__ == "__main__":
-    next_move(init_left_side,init_right_side,"left","a") #since "a" is a nonsensical move anyways
-    print("unable to find the way")
+    import time
+    start_t = time.perf_counter()
+    for i in range(100):
+        result = ""
+        if not next_move(init_left_side, init_right_side, "left", "a", depth=0,
+                         depth_limit=i, out=False):
+            result = "un"
+        print(result+"able to find the way with depth", i)
+    print(f"Time taken: {time.perf_counter()-start_t:.2f} s")
+# result is that at depth_limit 12 there is the first result
+# -> 11 Moves are needed because in last depth there wasn't a move and
+# at depth limit 12 there are depths 0 to 11 => 12 depths minus last one = 11
