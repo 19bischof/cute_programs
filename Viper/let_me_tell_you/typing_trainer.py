@@ -6,6 +6,8 @@ from api_call2 import quotable_dot_io_api_call as q_io
 from api_call import quotes_dot_net_api_call as q_net
 from getch import Getch
 from list_of_praises import lop
+from list_of_insults import loi
+
 if os.name == 'nt':
     import ctypes
     ctypes.windll.kernel32.SetConsoleTitleW("Did I wake you? 💋")
@@ -19,6 +21,20 @@ white = "\033[37m"
 up = "\033[A"
 down = "\033[B"
 json_file_path = pathlib.Path(__file__).parent.absolute().as_posix() + "/quotes.json"
+fail_limit = 0
+
+if sys.argv:
+    for ind,arg in enumerate(sys.argv):
+        if arg.strip() in ("-l","--limit"):
+            try:
+                next_arg = sys.argv[ind+1]
+                if next_arg.isdigit():
+                    fail_limit = int(next_arg)
+            except IndexError: pass
+        elif arg.strip() in ("-h","--help"):
+            print("A typing trainer with famous quotes"+
+            "\nUsage: python.exe *this-file* [(-l|--limit) number, (-h|--help)]")
+            quit()
 
 
 def get_new_quote():
@@ -124,6 +140,9 @@ def start_game(cutoff_points):
         sys.stdin.flush()
 
         key = getch()
+        if key == b"\x03":  # if CTRL + C
+            os.system("cls" if os.name == "nt" else "clear")
+            quit()
         if key == bytes(the_quote[pointer], "utf-8"):  # if correct chararcter input
             if not start_time:                          #starts time only when correct first character correct
                 start_time = time.perf_counter()
@@ -133,9 +152,12 @@ def start_game(cutoff_points):
             pointer += 1
         else:
             wrong_input += 1
-        if key == b"\x03":  # if CTRL + C
-            os.system("cls" if os.name == "nt" else "clear")
-            quit()
+            if wrong_input > fail_limit:
+                insult = random.choice(loi)
+                os.system("cls" if os.name == "nt" else "clear")
+                print("Assessment:",insult)
+                quit()
+            
 
     print("\nQuote by: {author}".format(author=the_quote_data["author"]))
     # 5 characters are a word
