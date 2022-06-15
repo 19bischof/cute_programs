@@ -17,7 +17,7 @@ else:
 red = "\033[91m"
 turquoise = "\033[36m"
 green = "\033[32m"
-white = "\033[37m"
+reset = "\033[0m"
 up = "\033[A"
 down = "\033[B"
 json_file_path = pathlib.Path(__file__).parent.absolute().as_posix() + "/quotes.json"
@@ -25,13 +25,13 @@ fail_limit = 0
 
 if sys.argv:
     for ind,arg in enumerate(sys.argv):
-        if arg.strip() in ("-l","--limit"):
+        if arg.strip() in ("-l","--limit","/l"):
             try:
                 next_arg = sys.argv[ind+1]
                 if next_arg.isdigit():
                     fail_limit = int(next_arg)
             except IndexError: pass
-        elif arg.strip() in ("-h","--help"):
+        elif arg.strip() in ("-h","--help","/h"):
             print("A typing trainer with famous quotes"+
             "\nUsage: python.exe *this-file* [(-l|--limit) number, (-h|--help)]")
             quit()
@@ -124,9 +124,9 @@ def start_game(cutoff_points):
     os.system("cls" if os.name == "nt" else "clear")
     for i in range(len(the_quote)):
         if i in cutoff_points:
-            print(red + the_quote[i] + white + "\n", flush=True, end="")
+            print(red + the_quote[i] + reset + "\n", flush=True, end="")
         else:
-            print(red + the_quote[i] + white, flush=True, end="")
+            print(red + the_quote[i] + reset, flush=True, end="")
 
     for i in range(len(cutoff_points)):
         print(up, end="", flush=True)
@@ -146,7 +146,7 @@ def start_game(cutoff_points):
         if key == bytes(the_quote[pointer], "utf-8"):  # if correct chararcter input
             if not start_time:                          #starts time only when correct first character correct
                 start_time = time.perf_counter()
-            print(turquoise + the_quote[pointer] + white, end="", flush=True)
+            print(turquoise + the_quote[pointer] + reset, end="", flush=True)
             if pointer in cutoff_points:
                 print(down + "\r", end="", flush=True)
             pointer += 1
