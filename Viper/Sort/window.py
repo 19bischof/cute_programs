@@ -1,14 +1,18 @@
 import pygame
 import sys
 from settings import Settings as st
+
+
 class Window:
     in_focus = False
     instance = None
-    def __init__(self,Title):
+
+    def __init__(self, Title):
         pygame.init()
-        self.screen = pygame.display.set_mode([st.screen_width,st.screen_height])
+        self.screen = pygame.display.set_mode([st.screen_width, st.screen_height])
         pygame.display.set_caption(Title)
         Window.instance = self
+
     def check_events():
         while True:
             for event in pygame.event.get():
@@ -27,7 +31,6 @@ class Window:
                                         pause = False
             if Window.in_focus:
                 break
+
     def update():
         pygame.display.flip()
-    
-
