@@ -11,7 +11,7 @@ class quotable_dot_io_api_call:
 
     def get():
         try:
-            response = requests.get(quotable_dot_io_api_call.url)
+            response = requests.get(quotable_dot_io_api_call.url,timeout=1)
         except:
             return None
         if (response.status_code == 200):

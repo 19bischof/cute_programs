@@ -14,7 +14,7 @@ class quotes_dot_net_api_call:
         uid, token, searchtype[searchtype_index], search_query, format)
 
     def get():
-        response = requests.get(quotes_dot_net_api_call.url)
+        response = requests.get(quotes_dot_net_api_call.url,timeout=1)
         if (response.status_code == 200):
             json_quote = response.json()
             return {"content":json_quote['result']['quote'],"author":json_quote['result']['author']}

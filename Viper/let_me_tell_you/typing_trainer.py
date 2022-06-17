@@ -49,9 +49,8 @@ def get_new_quote():
     if quote_dict == None:
 
         print("The used API is not available!")
-        time.sleep(0.5)
         print("Loading quote from storage...")
-        time.sleep(1)
+        time.sleep(0.2)
         with open(json_file_path, "r") as f:
             try:
                 file_json = json.load(f)
