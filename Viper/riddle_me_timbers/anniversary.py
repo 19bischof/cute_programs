@@ -1,13 +1,13 @@
-# logic riddle from https://www.popularmechanics.com/science/math/a31153757/riddles-brain-teasers-logic-puzzles/
-# Carol was creating a family tree, but had trouble tracking down her mother's birthdate.
-# The only clue she found was a letter written from her grandfather to her grandmother on the day
-# her mother was born. Unfortunately, some of the characters were smudged out, represented here with a "___".
-# (The length of the line does not reflect the number of smudged characters.)
-# "Dear Virginia, Little did I know when I headed to work this Monday morning, that by evening
-# we would have a beautiful baby girl. And on our wedding anniversary, no less! It makes me think
-# back to that incredible weekend day, J___ 27th, 19___, when we first shared our vow to create
-# a family together, and, well, here we are! Happy eighth anniversary, my love. Love, Edwin"
-# The question: When was Carol's mother born?
+"""logic riddle from https://www.popularmechanics.com/science/math/a31153757/riddles-brain-teasers-logic-puzzles/
+Carol was creating a family tree, but had trouble tracking down her mother's birthdate.
+The only clue she found was a letter written from her grandfather to her grandmother on the day
+her mother was born. Unfortunately, some of the characters were smudged out, represented here with a "___".
+(The length of the line does not reflect the number of smudged characters.)
+"Dear Virginia, Little did I know when I headed to work this Monday morning, that by evening
+we would have a beautiful baby girl. And on our wedding anniversary, no less! It makes me think
+back to that incredible weekend day, J___ 27th, 19___, when we first shared our vow to create
+a family together, and, well, here we are! Happy eighth anniversary, my love. Love, Edwin"
+The question: When was Carol's mother born?"""
 import datetime
 current_date = datetime.date(1900, 1, 1)
 end_date = datetime.date(2000, 1, 1)
