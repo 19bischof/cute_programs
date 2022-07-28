@@ -8,167 +8,181 @@ For example, Chloe's agent is okay if Chloe and Lexa are alone in the boat or on
 if Lexa's agent is also with them. So how can they all get across the river?
 
 """
-
-init_agents = [-1,-2,-3]
-init_stars = [1,2,3]
-# The Agent of 1 is -1
-init_pool = [1,2,3,-1,-2,-3]
-init_left_side = init_pool.copy()
-init_right_side = []
-next_side = {0:1,1:0} #0 is left, 1 is right
+init_stars = "ABC" #change this but set ass = False (original: "ABC")
+init_agents = init_stars.lower()
+init_pool = init_agents + init_stars
+init_left_side = init_pool
+init_right_side = ""
+next_side = {"left": "right", "right": "left"}
+history = []
+count = 0
 
 red = "\033[31m"
 white = "\033[37m"
 blue = "\033[34m"
 
+minimal = True #if minimal depth should be taken (more processing)
+out = False #if steps should be printed (slow)
+ass = True #if assertion checks should be on (when programming)
 
-def order_arr(a):
-    pos,neg = [],[]
-    for c in a:
-        if c > 0:
-            pos += [c]
+
+def order_str(s):
+    up, low = "", ""
+    for c in s:
+        if c.upper() == c:
+            up += c
         else:
-            neg += [c]
-    pos = sorted(pos)
-    neg = sorted(neg)
-    neg.reverse()
-    return neg+pos
+            low += c
+    up = sorted(up)
+    low = sorted(low)
+    return ''.join(low)+''.join(up)
 
 
-assert order_arr([2,-1,-3,3,-2,1]) == [-1,-2,-3,1,2,3]
+if ass:assert order_str("BAcCba") == "abcABC"
 
 
-def add_to_arr(s, c):
-    s = s.copy()
-    assert len(c) in (1, 2)
-    s += c
-    return s
+def add_to_str(s, c):
+    if ass:assert len(c) in (1, 2)
+    return s + c
 
-def remove_from_arr(s, c):
-    s = s.copy()
-    assert len(s) >= len(c)
+
+def remove_from_str(s, c):
+    if ass:assert len(s) >= len(c)
     for one_c in c:
-        s.remove(one_c)
+        s = s.replace(one_c, '')
     return s
-    
 
 
 def find_permutations_from_pool(pool):
-    lop = [[p] for p in pool]
+    lop = [c for c in pool]
     for ind, x in enumerate(pool):
         for y in pool[ind+1:]:
-            lop.append([x,y])
+            lop.append(x+y)
     return lop
 
 
-assert add_to_arr([-1,-2,-3], [1]) == [-1, -2, -3, 1]
-assert add_to_arr([-1,2], [-2,3]) == [-1,2,-2,3]
-assert add_to_arr([], [-1,3]) == [-1,3]
-assert remove_from_arr([1,2,3], [1]) == [2,3]
-assert remove_from_arr([-1,-2,2,3], [-1,3]) == [-2,2]
-assert remove_from_arr([-2], [-2]) == []
-assert find_permutations_from_pool([-1,-3,2]) == [[-1],[-3],[2],[-1,-3],[-1,2],[-3,2]]
-
+if ass:assert add_to_str("abc", 'A') == "abcA"
+if ass:assert add_to_str("aB", 'bC') == "aBbC"
+if ass:assert add_to_str("", "aC") == "aC"
+if ass:assert remove_from_str("ABC", "A") == "BC"
+if ass:assert remove_from_str("abBC", "aC") == "bB"
+if ass:assert remove_from_str("b", "b") == ""
+if ass:assert find_permutations_from_pool("ace") == ["a", "c", "e", "ac", "ae", "ce"]
 
 def agent_alone_on_side(left, right):
     """True if not allowed"""
     for c in init_pool:
-        assert c in left + right
-    assert len(left) + len(right) == 6
-    
+        if ass:assert c in left + right
+    if ass:assert len(left) + len(right) == len(init_pool)
     for side in (left, right):
         for star in init_stars:
-            if star in side and star*-1 not in side:
+            if star in side and star.lower() not in side:
                 for agent in init_agents:
                     if agent in side:
                         return True
     return False
 
 
-assert agent_alone_on_side([-1,-2,1], [-3,2,3]) == True
-assert agent_alone_on_side([-1,-2,-3], [1,2,3]) == False
-assert agent_alone_on_side([-3,-2,-1,1,2], [3]) == False
-assert agent_alone_on_side([-1,-2,1,2,3], [-3]) == True
+if ass:assert agent_alone_on_side("abA", "cBC") == True
+if ass:assert agent_alone_on_side("abc", "ABC") == False
+if ass:assert agent_alone_on_side("abcAB", "C") == False
+if ass:assert agent_alone_on_side("abABC", "c") == True
 
 
 def agent_alone_on_boat(permut):
     """True if not allowed"""
     if len(permut) == 1:
-        assert permut[0] in init_pool
+        if ass:assert permut in init_pool
         return False
-    assert len(permut) == 2
-    assert permut[0] != permut[1]
+    if ass:assert len(permut) == 2
+    if ass:assert permut[0] != permut[1]
 
-    for star in init_stars:
+    stars = init_stars
+    for star in stars:
         if star in permut:
             for agent in init_agents:
-                if agent in permut and agent*-1 != star:
+                if agent in permut and star.lower() != agent:
                     return True
     return False
 
 
-assert agent_alone_on_boat([-1,-2]) == False
-assert agent_alone_on_boat([1]) == False
-assert agent_alone_on_boat([1,-2]) == True
-assert agent_alone_on_boat([1,2]) == False
+if ass:assert agent_alone_on_boat("ab") == False
+if ass:assert agent_alone_on_boat("A") == False
+if ass:assert agent_alone_on_boat("Ab") == True
+if ass:assert agent_alone_on_boat("AB") == False
 
 
 def done(left, right):
     """True if done"""
-    for c in init_pool:
-        assert c in left + right
-    assert len(left) + len(right) == 6
-    return len(right) == 6
+    if ass:
+        for c in init_pool:
+            assert c in left + right
+    if ass:assert len(left) + len(right) == len(init_pool)
+    return len(right) == len(init_pool)
 
 
-assert done([], [1,-2,3,-3,2,-1]) == True
-assert done([-3], [2,-2,1,-1,3]) == False
+if ass:assert done("", "acBACb") == True
+if ass:assert done("c", "abBAC") == False
 
 
-def print_state(left, right, last, depth):
-    for side in (order_arr(left), ":", order_arr(right)):
+def print_state(left, right, last, depth,ret=False):
+    out = ""
+    for side in (order_str(left), ":", order_str(right)):
         for c in side:
-            print(blue if c == last else "",c, end=white,sep="")
-    print(red, depth, white)
+            out += c+white
+    out += red+" ["+str(depth)+"]"+ blue + " ["+last+"]" + white
+    if ret:
+        return out
+    print(out)
 
 
-def next_move(left_side, right_side, side, last, depth, depth_limit=100, out=True):
+def next_move(left_side, right_side, side, last, depth, depth_limit=100):
+
     if depth == depth_limit:  # set limit to prevent endless loop and go through all permutations before depth 100
         return
-    assert side in next_side.keys()
-    assert len(last) in (1, 2)
-    for c in last:
-        assert c in left_side + right_side
-    assert len(left_side) + len(right_side) == 6
-    for c in init_pool:
-        assert c in left_side+right_side
+    global count 
+    if ass:
+        assert side in ("left", "right")
+        assert len(last) in (1, 2)
+        for c in last:
+            assert c in left_side + right_side + " "
+        assert len(left_side) + len(right_side) == len(init_pool)
+        for c in init_pool:
+            assert c in left_side+right_side
 
     if out:
         print_state(left_side, right_side, last, depth)
+
     if done(left_side, right_side):
+        global history
+        history = [None for _ in range(depth+1)]
+        history[depth] = print_state(left_side,right_side,last,depth,ret=True)
         return True
 
     agent_alone_on_side(left_side, right_side)
 
-    if side == 0:
+    if side == "left":
         current = left_side
     else:
         current = right_side
     permut_pool = find_permutations_from_pool(current)
-    permut_pool.remove(last)
+    if last != " " :permut_pool.remove(last)
     for perm in permut_pool:
+        count += 1
+
         if agent_alone_on_boat(perm):
             continue
-        if side == 0:
-            new_left = remove_from_arr(left_side, perm)
-            new_right = add_to_arr(right_side, perm)
+        if side == "left":
+            new_left = remove_from_str(left_side, perm)
+            new_right = add_to_str(right_side, perm)
         else:
-            new_left = add_to_arr(left_side, perm)
-            new_right = remove_from_arr(right_side, perm)
+            new_left = add_to_str(left_side, perm)
+            new_right = remove_from_str(right_side, perm)
 
         if agent_alone_on_side(new_left, new_right):
             continue
-        if next_move(new_left, new_right, next_side[side], perm, depth+1, depth_limit=depth_limit, out=out):
+        if next_move(new_left, new_right, next_side[side], perm, depth+1, depth_limit=depth_limit):
+            history[depth] = print_state(left_side,right_side,last,depth,ret=True)
             return True
         if out:
             print_state(left_side, right_side, last, depth)
@@ -177,13 +191,24 @@ def next_move(left_side, right_side, side, last, depth, depth_limit=100, out=Tru
 if __name__ == "__main__":
     import time
     start_t = time.perf_counter()
-    for i in range(100):
+    start_i = 20
+    tries = 1
+    if minimal:
+        start_i = 0
+        tries = 1_000 #just some large number so algorithm doesn't stop
+    for max_depth in range(start_i,start_i+tries):
         result = ""
-        if not next_move(init_left_side, init_right_side, 0,[1], depth=0,
-                         depth_limit=i, out=False):
-            result = "un"
-        print(result+"able to find the way with depth", i)
+        if next_move(init_left_side, init_right_side, "left", " ", depth=0,
+                         depth_limit=max_depth):
+            print(blue+"Able to find the way with depth", max_depth,white)
+            break
+    else:
+        print(red+"Unable to find the way!"+white)
+    for entry in history:
+        print(entry)
     print(f"Time taken: {time.perf_counter()-start_t:.2f} s")
+    print(f"Paths explorered: {count:_d}")
+    print(f"info: {max_depth=} {init_pool=} {minimal=}")
 # result is that at depth_limit 12 there is the first result
 # -> 11 Moves are needed because in last depth there wasn't a move and
 # at depth limit 12 there are depths 0 to 11 => 12 depths minus last one = 11
