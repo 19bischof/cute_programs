@@ -1,5 +1,6 @@
 """logic riddle from https://www.popularmechanics.com/science/math/a31153757/riddles-brain-teasers-logic-puzzles/
-King Nupe of the kingdom Catan dotes on his two daughters so much that he decides the kingdom would be better off with more girls than boys, and he makes the following decree:
+King Nupe of the kingdom Catan dotes on his two daughters so much that he decides the kingdom would be better off
+with more girls than boys, and he makes the following decree:
 All child-bearing couples must continue to bear children until they have a daughter!
 But to avoid overpopulation, he makes an additional decree:
 All child-bearing couples will stop having children once they have a daughter!
@@ -12,4 +13,5 @@ for i in tqdm.tqdm(range(iterations)):
     while random.random() > 0.5: # if got a boy -> continue sexing
         boys += 1
     girls += 1 #eventually got a girl
-print(f"boys: {100*boys/(boys+girls):.0f} %\t girls: {100*girls/(boys+girls):.0f}")
+print(f"({100*boys/(boys+girls):.2f}%){boys=:_d}")
+print(f"({100*girls/(boys+girls):.2f}%){girls=:_d}""")
