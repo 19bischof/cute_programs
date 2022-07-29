@@ -72,7 +72,13 @@ def check_if_got_unread():
         got_one = True
     if got_one:
         user_name = os.environ['USERNAME']
-        os.system("C:\\ProgramData\\"+user_name+r"\WhatsApp\WhatsApp.exe")
+        already_open = False
+        import psutil
+        for p in psutil.process_iter():
+            if "WhatsApp.exe" in p.name():
+                already_open = True
+        if not already_open:
+            os.system("C:\\ProgramData\\"+user_name+r"\WhatsApp\WhatsApp.exe")
     else:
         print("no unread messages!")
 
