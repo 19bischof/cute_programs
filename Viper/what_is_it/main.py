@@ -10,11 +10,11 @@ import os
 user_path = os.path.expanduser('~')
 options = Options()
 options.headless = True
-options.log
+options.binary = user_path+r"\AppData\Local\Mozilla Firefox\firefox.exe"
 fp = webdriver.FirefoxProfile(
     user_path+r"\AppData\Roaming\Mozilla\Firefox\Profiles\uwojlef0.automat")
-driver = webdriver.Firefox(options=options,
-                           firefox_profile=fp, firefox_binary=user_path+r"\AppData\Local\Mozilla Firefox\firefox.exe")
+options.profile = fp
+driver = webdriver.Firefox(options=options)
 driver.get("https://web.whatsapp.com")
 # driver.minimize_window()
 try:
