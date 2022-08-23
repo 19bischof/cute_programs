@@ -10,7 +10,8 @@ class cheese:
             [one_block.copy() for y in range(st.blocks_no)]
             for x in range(st.blocks_no)
         ]
-        self.all_blocks_player = [[-1 for x in range(st.blocks_no)] for y in range(st.blocks_no)]
+        self.all_blocks_player = [
+            [-1 for x in range(st.blocks_no)] for y in range(st.blocks_no)]
         self.last_move = None  # (c,r,line_index)
         self.cur_player = random.randrange(st.player_count)
 
@@ -31,12 +32,12 @@ class cheese:
         new_index = (line_index+2) % 4
         calc_table = {0: (-1, 0), 1: (0, 1), 2: (1, 0), 3: (0, -1)}
         c_off, r_off = calc_table[new_index]
-        if line_index%2: #vertical
+        if line_index % 2:  # vertical
             if r-r_off >= 0 and r-r_off < st.blocks_no:
                 self.all_blocks_lines[c-c_off][r-r_off][new_index]
                 return c-c_off, r-r_off, new_index
-        
-        else: #horizontal
+
+        else:  # horizontal
             if c-c_off >= 0 and c-c_off < st.blocks_no:
                 self.all_blocks_lines[c-c_off][r-r_off][new_index]
                 return c-c_off, r-r_off, new_index
@@ -47,7 +48,7 @@ class cheese:
         if self.all_blocks_lines[c][r].count(True) == 4:
             self.all_blocks_player[c][r] = self.cur_player
             completed = True
-        ret = self._get_other_line(c,r,line_index)
+        ret = self._get_other_line(c, r, line_index)
         if ret:
             c, r, line_index = ret
             if self.all_blocks_lines[c][r].count(True) == 4:
@@ -56,16 +57,15 @@ class cheese:
         if completed:
             self.cur_player = (self.cur_player+1) % st.player_count
 
-
     def set_line(self, c, r, line_type):
         # print(c,r,line_type)
         c, r, line_index = self._get_line(c, r, line_type)
         if self.all_blocks_lines[c][r][line_index]:
             return "already set!"
         self.all_blocks_lines[c][r][line_index] = True
-        ret = self._get_other_line(c,r,line_index)
+        ret = self._get_other_line(c, r, line_index)
         if ret:
-            new_c,new_r,new_line_index = ret
+            new_c, new_r, new_line_index = ret
             self.all_blocks_lines[new_c][new_r][new_line_index] = True
         self.last_move = (c, r, line_index)
         self.block_completed()
@@ -75,7 +75,7 @@ class cheese:
     def is_line_set(self, c, r, line_type):
         ret = self._get_line(c, r, line_type)
         if ret is not None:
-            c,r,line_index = ret
+            c, r, line_index = ret
             return self.all_blocks_lines[c][r][line_index]
         return -1
 
@@ -102,6 +102,6 @@ class cheese:
 
 if __name__ == "__main__":
     ch = cheese()
-    c,r,line_index = ch._get_line(1,4,"horizontal")
-    print(c,r,line_index)
-    print(ch._get_other_line(c,r,line_index))
+    c, r, line_index = ch._get_line(1, 4, "horizontal")
+    print(c, r, line_index)
+    print(ch._get_other_line(c, r, line_index))
