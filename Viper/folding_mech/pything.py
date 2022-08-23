@@ -63,9 +63,9 @@ def pretty_print_files(files):
 
 if __name__ == "__main__":
     paths = []
-    paths.append(r"C:\Users\m.bischof\Desktop")
-    paths.append("C:/test")
+    paths.append(pathlib.Path(__file__).absolute().parent.parent.parent.parent)
 
     for path in paths:
         lot = all_files_from_dir(path)
         pretty_print_files(lot)
+        print(f"# All files from {path}")
