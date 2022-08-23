@@ -3,15 +3,17 @@
 import datetime
 import time
 import os
+import pathlib
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
 passw = input("Please put in your password!\n")
 extended_pool = "0123456789abcdefghijklmnopqrstuvwxyz"
 pool = "abcdefghijklmnopqrstuvwxyz"
 
 def guess_from_dick(p):
-    if not os.path.exists("./fat_words.txt"):
+    if not os.path.exists(project_path+"/fat_words.txt"):
         print("Dictionary not found in root!")
         return False
-    with open("fat_words.txt","r") as f:
+    with open(project_path+"/fat_words.txt","r") as f:
         words = f.read().splitlines()
         if p in words:
             return True
@@ -36,8 +38,8 @@ def guess_from_pool(p):
     global pool
     #convert p to array of indexes of pool
     ar_p = [pool.index(c) for c in p]
-    open("progress.txt", 'w') #reset file
-    with open("progress.txt", 'a') as f:
+    open(project_path+"/progress.txt", 'w') #reset file
+    with open(project_path+"/progress.txt", 'a') as f:
         f.write(str(ar_p)+"\n")
         cur_index = [0]
         while cur_index != ar_p:
@@ -98,4 +100,4 @@ if __name__ == "__main__":
             print(f"ETA: {(t_delta := give_estimation_from_pool() * (len(pool)**len(passw))):.3f} seconds | {datetime.timedelta(seconds=t_delta)}")
             guess_from_pool(passw)    #brute forcing
 
-    print(f"It took {(t_delta := time.perf_counter() - start_t) :.6f} seconds | | {datetime.timedelta(seconds=t_delta)}")
+    print(f"It took {(t_delta := time.perf_counter() - start_t) :.6f} seconds | {datetime.timedelta(seconds=t_delta)}")
