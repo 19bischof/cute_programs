@@ -1,3 +1,4 @@
-### You don't need to install packages to run ```typing_trainer.py```
-### You do however need a lot of packages as well as a tesseract executable to run ```sarah.py```
+### To run ```typing_trainer.py``` run this
+```python -m pip install requests```
+### To run ```sarah.py```, you need to install a some other packages as well as a tesseract executable
 ### If you're interested just fix the errors as they come (●'◡'●)
