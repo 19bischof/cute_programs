@@ -125,7 +125,7 @@ class Animate:
         Animate.render(p[0], vvip=already_checked)
         pygame.time.delay(int(100 / len(p[0])))
 
-
+Animate.start()
 while input("quit?").lower().strip() not in ("yes", "y"):
     Animate.start()
 pygame.quit()
