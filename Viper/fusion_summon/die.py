@@ -10,12 +10,15 @@ import httpx
 import aiohttp
 import requests
 import time
+import concurrent.futures
+import pathlib
 from url_valid import url_format
 
-if not os.path.exists("./profiler/"):
-    os.mkdir("./profiler/")
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
+if not os.path.exists(project_path+"/profiler/"):
+    os.mkdir(project_path+"/profiler/")
 
-with open("urls/toppy.txt", "r") as f:
+with open(project_path+"/urls/toppy.txt", "r") as f:
     urls = f.read().split("\n")
 for u in urls[:]:
     if not re.match(url_format,u):
@@ -56,7 +59,7 @@ def time_me(func):
             func.__name__, time.perf_counter()-start_t, hit/len(urls)*100)
         st = pstats.Stats(pr)  # create statistics from Profile
         st.sort_stats(pstats.SortKey.TIME)
-        st.dump_stats("profiler/"+func.__name__+".profiler")
+        st.dump_stats(project_path+"/profiler/"+func.__name__+".profiler")
         print(note)
         time_me.notes.append(note)
         print("----------------timeout for 2 seconds----------------")
@@ -93,7 +96,6 @@ def traditional():
 @time_me
 def fusion():
     "uses requests module with concurrent.future.ThreadPool"
-    import concurrent.futures
     resps = []
     with requests.Session() as session:
         #compiling list of futures:

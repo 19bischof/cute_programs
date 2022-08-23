@@ -1,8 +1,12 @@
+"""Show Function Profiles using snakeviz"""
 import os
 import subprocess
 import time
+import pathlib
 pees = []
-path = "./profiler/"
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
+
+path = project_path+"/profiler/"
 for file in os.listdir(path):
     if not os.path.isfile(path+file):
         continue
