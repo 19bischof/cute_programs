@@ -4,6 +4,9 @@ from infi.systray import SysTrayIcon
 import random
 import os
 import signal
+import pathlib
+
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
 
 
 class lolipop_Base(tk.Toplevel):
@@ -15,7 +18,8 @@ class lolipop_Base(tk.Toplevel):
         self.root_init()
         self.register_loli(self)
         super().__init__(master=self.root)
-        self.attributes("-topmost", True)  # on top and true for default children
+        # on top and true for default children
+        self.attributes("-topmost", True)
         self.title("Pop me 🎈 OR ELSE ...")
         self.decide_position()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
@@ -32,7 +36,7 @@ class lolipop_Base(tk.Toplevel):
         cls.root = tk.Tk()
         cls.root.withdraw()
         cls.root.protocol("WM_DELETE_WINDOW", lambda: None)
-        cls.photo = tk.PhotoImage(file="./one_bad_day.png")
+        cls.photo = tk.PhotoImage(file=project_path+"/one_bad_day.png")
         cls.root.iconphoto(True, cls.photo)
         cls.lolis = []
 
@@ -56,7 +60,8 @@ class lolipop_Base(tk.Toplevel):
             os.kill(pid, signal.Signal.SIGKILL)
 
     menu_options = (("IT'S SAFE HERE, QUICK!!", None, full_break),)
-    systray = SysTrayIcon("./ALARM.ico", "COME HERE!!", menu_options)
+    systray = SysTrayIcon(project_path+"/ALARM.ico",
+                          "COME HERE!!", menu_options)
     systray.start()
 
     @classmethod
