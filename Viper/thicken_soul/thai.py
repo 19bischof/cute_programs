@@ -9,9 +9,11 @@ from colored import fg, attr
 import random
 import time
 import logging
+import pathlib
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
 
 logging.basicConfig(
-    filename="c.log",
+    filename=project_path+"/c.log",
     encoding="utf-8",
     format="%(asctime)s:%(levelname)s\t%(message)s",
     filemode="a",
