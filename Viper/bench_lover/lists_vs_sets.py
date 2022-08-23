@@ -53,7 +53,7 @@ def print_result(ar_t, buck_t):
 
 if __name__ == "__main__":
     # initialize iterables
-    ar = gen_string_ar(1000 * 1000)
+    ar = gen_string_ar(1_000_000)
     buck = set(ar)
 
     print("------------ starting membership benchmark ------------")
