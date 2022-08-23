@@ -1,15 +1,16 @@
 from multiprocessing.managers import BaseManager
-from xml.dom.domreg import well_known_implementations
 import keyboard
 import time
 import os
 import json
+import pathlib
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
 
-def print_to_log(c:str,file_name="log.logfile"):
+def print_to_log(c:str,file_name=project_path+"/log.logfile"):
     with open(file_name,"a",encoding='utf-8') as f:
         f.write(c)
 
-def remove_last_char(file_name="log.logfile"):
+def remove_last_char(file_name=project_path+"/log.logfile"):
     with open(file_name,"rb+") as f:
         f.seek(-1,os.SEEK_END)
         f.truncate()
@@ -58,7 +59,7 @@ def try_4():
 def try_5():
 #does the same as try_3 but there is no backspace issue at least for windows
 #anyways it is the same as the bodule function but better suited
-    log_file = "simple.logfile"
+    log_file = project_path+"/simple.logfile"
     while True:
         keyboard.start_recording()
         time.sleep(5)
@@ -83,7 +84,7 @@ def try_6():
     global stop
     #stores all events without processing them
     #gives the option to reenact all the events back
-    log_file = "complex.logfile"
+    log_file = project_path+"/complex.logfile"
     start_time = None
     import signal
     while not stop:
@@ -112,7 +113,7 @@ def try_6():
 def try_6_2():
     #this reads the events stored in try_6 to play them out
     time.sleep(2)
-    log_file = "complex.logfile"
+    log_file = project_path+"/complex.logfile"
     k_events = []
     time_offset = 0
     with open(log_file,'r') as f:
@@ -132,7 +133,7 @@ def try_6_2():
     keyboard._os_keyboard.init()
     keyboard.play(k_events,speed_factor=3)
 
-        
-print(keyboard.key_to_scan_codes("linke windows"))  #weird this doesnt work ?
+#print(keyboard.key_to_scan_codes("linke windows"))  #weird this doesnt work ?
+# left windows key doesn't work for some reason ?
 
 try_6()
