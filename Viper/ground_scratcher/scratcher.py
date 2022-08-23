@@ -7,6 +7,8 @@ import requests
 import mimetypes
 import os
 import json
+import pathlib
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
 # url = "https://ipchicken.com/"
 # resp = requests.get(url)
 
@@ -18,8 +20,8 @@ import json
 class imagine:
     """parent class for dealing with images"""
 
-    image_path = "images/"
-    filter_path = "filter/"
+    image_path = project_path+"/images/"
+    filter_path = project_path+"filter/"
     json_path = filter_path+"000.json"
 
     def __init__(self):
@@ -67,10 +69,9 @@ class scratcher:
         self.browse(url,delay)
 
     def browse(self, url,delay):
-        # req = requests.get(url,timeout=(3.05, 7))
         import urllib.request
-        
-        with urllib.request.urlopen(url) as response:
+        req = urllib.request.Request(url,headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req) as response:
 
             html = response.read().decode('utf-8')
         # time.sleep(delay)
@@ -92,7 +93,7 @@ class scratcher:
 
 class chick(scratcher):
     """scratcher for ipchicken.com"""
-    url = "https://ipchicken.com"
+    url = "https://www.ipchicken.com"
 
     def __init__(self):
         super().__init__(self.url)
@@ -107,15 +108,19 @@ class chick(scratcher):
 
 
 class chain(scratcher):
-    url = "https://www.blockchain.com/prices/BTC"
+    url = "https://www.blockchain.com/explorer/prices"
 
     def __init__(self):
         super().__init__(self.url,5)
         self.parse()
     def parse(self):
-        elem = self.soup.select_one("span.iTPDUE")
-        print(elem)
-        self.data['Bitcoin in US'] = elem.get_text()
+        # elem = self.soup.select_one("span.iQXny") #short-term method
+        elem = self.soup.find("a",href='/explorer/assets/BTC')
+        # print(elem.div.attrs['class'])
+        # print(elem.div.div.attrs['class'])
+        the_elem = elem.div.div.findNextSibling()
+        self.data['Bitcoin in US'] = the_elem.get_text()
+        
 class unsplash(scratcher, imagine):
     """scratcher for unslpash.com"""
     # The soup select syntax was chosen on march 9nth for /backgrounds/nature
@@ -196,7 +201,7 @@ class napi_unsplash(scratcher, imagine):
 
 
 if __name__ == "__main__":
-    # print(chick())
+    print(chick())
     import time
     # unsplash()
     # napi_unsplash(3)
