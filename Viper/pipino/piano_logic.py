@@ -1,7 +1,8 @@
 import pygame
 import random
 from settings import settings as st
-
+import pathlib
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
 
 class pipino:
     @classmethod
@@ -75,8 +76,8 @@ class pipino:
     def do_init(cls):
         cls.clefs = st.what_clefs
     
-    g_clef_png = pygame.image.load('./images/g_clef.png')
-    f_clef_png = pygame.image.load('./images/f_clef.png')
+    g_clef_png = pygame.image.load(project_path+'/images/g_clef.png')
+    f_clef_png = pygame.image.load(project_path+'/images/f_clef.png')
     init = True
     help_letter = st.easy_mode
     
@@ -89,6 +90,4 @@ class pipino:
     cur_note = None
     start_surface = None
 
-    if st.number_of_pos != len(g_notes) or len(g_notes) != len(f_notes):
-        print("number of notes don't match!")
-        quit()
+    assert not (st.number_of_pos != len(g_notes) or len(g_notes) != len(f_notes))
