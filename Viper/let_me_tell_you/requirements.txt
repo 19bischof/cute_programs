@@ -1,0 +1,8 @@
+opencv_python==4.5.5.62
+Pillow==9.2.0
+pyenchant==3.2.2
+pynput==1.7.6
+pytesseract==0.3.10
+pywin32==303
+requests==2.26.0
+win32gui==221.6

@@ -1,0 +1,4 @@
+infi==0.0.1
+infi.systray==0.1.12
+psutil==5.9.1
+selenium==4.4.3

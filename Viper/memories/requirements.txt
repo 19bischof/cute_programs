@@ -1,0 +1,2 @@
+colored==1.4.3
+english_words==1.1.0

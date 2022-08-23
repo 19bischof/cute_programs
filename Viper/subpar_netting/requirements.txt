@@ -1,0 +1,2 @@
+console_menu==0.6.0
+consolemenu==1.0.1

@@ -1,0 +1,2 @@
+infi==0.0.1
+infi.systray==0.1.12

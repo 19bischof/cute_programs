@@ -1,0 +1,4 @@
+aiohttp==3.8.1
+grequests==0.6.0
+httpx==0.23.0
+requests==2.26.0
