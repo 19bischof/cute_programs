@@ -1,7 +1,7 @@
 import cv2
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\m.bischof\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
-img = cv2.imread(r'C:\Users\m.bischof\Pictures\canyoureadthis.PNG')
+pytesseract.pytesseract.tesseract_cmd = r'pathtoyour\tesseract.exe'
+img = cv2.imread(r'canyoureadthis.PNG')
 # img = cv2.resize(img, (720,480))
 # cv2.imshow('Result',img)
 # cv2.waitKey(0)
@@ -29,10 +29,10 @@ def enum_cb(hwnd, results):
     winlist.append((hwnd, win32gui.GetWindowText(hwnd)))
 win32gui.EnumWindows(enum_cb, toplist)
 
-firefox = [(hwnd, title) for hwnd, title in winlist if 'did i wake you? 💋' in title.lower()]
-# just grab the hwnd for first window matching firefox
-firefox = firefox[0]
-hwnd = firefox[0]
+window = [(hwnd, title) for hwnd, title in winlist if 'did i wake you? 💋' in title.lower()]
+# just grab the hwnd for first window matching the title
+window = window[0]
+hwnd = window[0]
 print(hwnd,type(hwnd))
 
 win32gui.SetForegroundWindow(hwnd)

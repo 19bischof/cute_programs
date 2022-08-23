@@ -180,4 +180,4 @@ while 1:
             break
     except KeyboardInterrupt:
         break
-print("I'm a game and you're a player 💋!")
+print("I'm your game and you're my player 💋!")
