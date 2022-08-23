@@ -1,8 +1,10 @@
 import pygame
 import random
+import pathlib
 #important:
 #ufo[] gives first x then y of the upper left corner of the rect.
 #ball[] gives first x then y of the middle of the sphere
+project_path = pathlib.Path(__file__).absolute().parent.as_posix()
 pygame.init()
 screen_height = 500
 screen_width = 1000
@@ -29,11 +31,11 @@ max_number_of_empty_balls = 10
 number_of_empty_balls = max_number_of_empty_balls - 1
 space_pressed = False
 running = True
-ball_image = pygame.image.load("./images/medicine-ball.png").convert_alpha()
+ball_image = pygame.image.load(project_path+"/images/medicine-ball.png").convert_alpha()
 ball_image = pygame.transform.smoothscale(ball_image,(ball_radius*2,ball_radius*2))
-ship_image = pygame.image.load("./images/ship.png").convert_alpha()
+ship_image = pygame.image.load(project_path+"/images/ship.png").convert_alpha()
 ship_image = pygame.transform.smoothscale(ship_image,(ship_width,ship_height))
-ufo_image = pygame.image.load("./images/ufo.png").convert_alpha()
+ufo_image = pygame.image.load(project_path+"/images/ufo.png").convert_alpha()
 ufo_image = pygame.transform.smoothscale(ufo_image,(ufo_width,ufo_height))
 while running:
     for event in pygame.event.get():
