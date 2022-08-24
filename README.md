@@ -27,6 +27,7 @@ To install packages from requirements.txt run ```python -m pip install -r requir
 - **Sonic:** *Speed-Test Server and Client to test network speed*
 - **Sort:** *5 Sort-Algorithms and how they work, demonstrated visually*
 - **subpar_netting:** *A Subnetting Utility working with IPv4*
+- **sweeper:** *Minesweeper game in console*
 - **thicken_soul:** *Tic-Tac-Toe game with different levels of Bots (Console and GUI)*
 - **what_is_it:** *Daemon that opens up Whatsapp once you get a new message*
 
@@ -41,3 +42,5 @@ ___
 ___
 - **iguess:** *String guessing in c*
 
+## Cup (java)
+- **subnetting:** *Subnetting utility working with IPv4*
