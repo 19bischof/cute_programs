@@ -9,15 +9,15 @@ The question: How many elbows did Florian tap? """
 # solution: a dictionary that stores each answer(0-8) as keys(0-8) with a list of indexes that it bumped with as value
 
 import time
-num_of_people = 4
+num_of_people = 10
 # all indeces of people go from 0 to 9
-pool = list(range(0, num_of_people))  # original: range(0,10)
+pool = list(range(num_of_people))  # original: range(10)
 
 
 class curious_dick(dict):
 
     def set_new(self, key, value) -> None:
-        print("setnew",key,value)
+        # print("setnew",key,value)
         assert type(value) == tuple
         assert key in range(0, num_of_people)
         assert key not in value
@@ -121,3 +121,5 @@ def path_finding(answers: curious_dick):
 
 
 print(path_finding(the_dick := curious_dick()))
+
+#Conclusion: this riddle is simply not fit to solve like this. The solution to the riddle has nothing to do with which person one actually interacted with.
