@@ -98,7 +98,7 @@ systray.start()
 
 while running:
     if i % 20 == 0:
-        driver.save_full_page_screenshot("no_shot.png")
+        # driver.save_full_page_screenshot("no_shot.png")
         load_chats()
     check_if_got_unread()
     time.sleep(1)
