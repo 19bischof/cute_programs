@@ -92,8 +92,7 @@ def stop(*args):
     running = False
 
 
-menu_options = (("Stop Whatsapp daemon", None, stop),)
-systray = SysTrayIcon("./Dapino-Summer-Holiday-Palm-tree.ico", "Whatsapp", menu_options)
+systray = SysTrayIcon("./Dapino-Summer-Holiday-Palm-tree.ico", "Whatsapp", on_quit=stop)
 systray.start()
 
 while running:
