@@ -25,7 +25,8 @@ try:
     )
 except TimeoutException:
     print("Couldn't load Whatsapp Web!")
-    driver.save_screenshot("what_happened.png")
+    # driver.save_screenshot("what_happened.png")
+    os.system("start firefox.exe -p automat https://web.whatsapp.com")
     driver.quit()
     quit()
 print("Whatsapp Web loaded successfully!")
