@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import time
 import os
+tick_rate = 3 #seconds
 user_path = os.path.expanduser('~')
 options = Options()
 options.headless = True
@@ -52,7 +53,7 @@ def load_chats():
 
 
 def check_if_got_unread():
-    global chat_dick
+    global chat_dick,tick_rate
     not_vips = []
     with open("unimportant_chats.secret", "r") as f:
         for line in f:
@@ -72,14 +73,18 @@ def check_if_got_unread():
         print("You've got unread messages from", name)
         got_one = True
     if got_one:
+        program_path = os.environ['PROGRAMDATA']
         user_name = os.environ['USERNAME']
-        already_open = False
-        import psutil
-        for p in psutil.process_iter():
-            if "WhatsApp.exe" in p.name():
-                already_open = True
-        if not already_open:
-            os.system("C:\\ProgramData\\"+user_name+r"\WhatsApp\WhatsApp.exe")
+        import subprocess
+        import win32gui
+        win_handle = win32gui.GetForegroundWindow()  
+        if "Image" not in str(subprocess.check_output('tasklist /fi "Imagename eq Whatsapp.exe"',creationflags=subprocess.CREATE_NO_WINDOW)):
+            subprocess.Popen(program_path+"\\"+user_name+r"\WhatsApp\WhatsApp.exe",creationflags=subprocess.CREATE_NO_WINDOW)
+            start_t = time.perf_counter()
+            while time.perf_counter() - start_t < 3:
+                if win32gui.GetForegroundWindow() != win_handle:
+                    win32gui.SetForegroundWindow(win_handle)
+                time.sleep(0.01)
     else:
         print("no unread messages!")
 
@@ -87,13 +92,18 @@ def check_if_got_unread():
 i = 0
 running = True
 
-
+def reload(*args):
+    driver.refresh()
+    
 def stop(*args):
     global running
     running = False
+    
+    
 
-
-systray = SysTrayIcon("./Dapino-Summer-Holiday-Palm-tree.ico", "Whatsapp", on_quit=stop)
+menu_options = (("Reload", None, reload),)
+systray = SysTrayIcon("./Dapino-Summer-Holiday-Palm-tree.ico", "Whatsapp", on_quit=stop,menu_options=menu_options)
+systray
 systray.start()
 
 while running:
@@ -101,7 +111,7 @@ while running:
         # driver.save_full_page_screenshot("no_shot.png")
         load_chats()
     check_if_got_unread()
-    time.sleep(1)
+    time.sleep(tick_rate)
     i += 1
 driver.quit()
 systray.shutdown()
