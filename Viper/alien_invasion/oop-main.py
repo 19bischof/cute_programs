@@ -126,14 +126,14 @@ class Alien(Base):
                 a.x = 0
             if a.x > Conni.screen_width - Alien.width:
                 a.x = Conni.screen_width - Alien.width
-            if random.randint(-1, 100) == a.direction:
+            if random.random() > 0.994:
                 a.direction *= -1
             if a.y + Alien.height >= Conni.screen_height:
                 Conni.running = False
             for b in Ball.instances:
                 # if b.y - Ball.radius< a.y + Alien.height and b.y + Ball.radius > a.y:
                 #     if b.x - Ball.radius< a.x and b.x + Ball.radius > a.x or b.x - Ball.radius> a.x and b.x - Ball.radius < a.x + Alien.width:            #rectangle ball calc
-                if (a.x + Alien.width - b.x)**2 + (a.y + Alien.height - b.y)**2 <= Ball.radius**2 or (a.x - b.x)**2 + (a.y + Alien.height - b.y)**2 <= Ball.radius**2 or a.x < b.x < a.x + Alien.width and b.y-a.y <= Ball.radius:
+                if (a.x + Alien.width - b.x)**2 + (a.y + Alien.height - b.y)**2 <= Ball.radius**2 or (a.x - b.x)**2 + (a.y + Alien.height - b.y)**2 <= Ball.radius**2 or a.x < b.x < a.x + Alien.width and abs(b.y-a.y) <= Ball.radius:
                     del Alien.instances[index - shift]
                     shift += 1
         Alien.speed + 0.001

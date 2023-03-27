@@ -52,10 +52,12 @@ def print_result(ar_t, buck_t):
 
 
 if __name__ == "__main__":
-    # initialize iterables
-    ar = gen_string_ar(1_000_000)
+    print("\n")
+    print("------------ initializing array and set ------------")
+    
+    ar = gen_string_ar(length := 1_000_000)
     buck = set(ar)
-
+    print(f"initialized with {length} words")
     print("------------ starting membership benchmark ------------")
     count = 1000
     # members are generated before benchmark so result is more pure
