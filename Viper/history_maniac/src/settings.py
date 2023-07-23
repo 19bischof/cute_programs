@@ -4,6 +4,6 @@ with open("secret.json") as f:
 user = obj['user']
 passwd = obj['passwd']
 ip = obj['ip']
-file_name = 'current_history.txt'
-file_path = '/history/'+file_name
+file_name = 'data/current_history.txt'
+file_path = '/history/current_history.txt'
 

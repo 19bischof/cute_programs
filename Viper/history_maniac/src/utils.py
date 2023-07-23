@@ -26,7 +26,7 @@ def append_to_file(url):
         f.write('\n'+date + ' ' + url)
         
 def upload_new_file() :
-    tmp_file = 'verify_history.txt'
+    tmp_file = 'data/verify_history.txt'
     get_file(tmp_file)
     if os.stat(tmp_file).st_size > os.stat(st.file_name).st_size:
         return

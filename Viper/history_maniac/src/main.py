@@ -1,6 +1,14 @@
 from fastapi import FastAPI, Request
-import utils
+import utils as utils
 from fastapi.staticfiles import StaticFiles
+import os
+
+try:
+    os.mkdir('data')
+except FileExistsError:
+    pass
+with open("pid.txt","w") as f:
+    f.write(str(os.getpid()))
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
