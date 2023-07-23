@@ -1,6 +1,10 @@
 from fastapi import FastAPI, Request
 import utils
+from fastapi.staticfiles import StaticFiles
+
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 utils.get_file()
 
 @app.post("/append_history/")
@@ -10,6 +14,7 @@ async def append_history(request: Request):
     print('url:',url)
     utils.append_to_file(url)
     utils.upload_new_file()
+    
     # Your action logic here (you can use the "message" variable)
     # For demonstration purposes, let's just return the message back to the client
     

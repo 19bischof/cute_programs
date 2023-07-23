@@ -1,7 +1,7 @@
 import ftplib, os
 import settings as st
 import datetime
-ftp = ftplib.FTP('192.168.178.1',st.user,st.passwd)
+ftp = ftplib.FTP(st.ip,st.user,st.passwd)
 
 def get_file(file_name = st.file_name):
     with open(file_name,'wb') as f:
