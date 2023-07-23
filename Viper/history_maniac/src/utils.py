@@ -9,6 +9,10 @@ def get_file(file_name = st.file_name):
             ftp.retrbinary('RETR %s' % st.file_path, f.write)
         except ftplib.error_perm:
             pass
+        except ConnectionResetError:
+            ftp.connect()
+            ftp.login(st.user,st.passwd)
+            return get_file(file_name)
         
 def append_to_file(url):
     with open(st.file_name, 'rb') as f:
@@ -31,4 +35,9 @@ def upload_new_file() :
     if os.stat(tmp_file).st_size > os.stat(st.file_name).st_size:
         return
     with open(st.file_name,'rb') as f:
-        ftp.storbinary('STOR ' + st.file_path, f) 
+        try:
+            ftp.storbinary('STOR ' + st.file_path, f)
+        except ConnectionResetError:
+            ftp.connect()
+            ftp.login(st.user,st.passwd)
+            return upload_new_file() 

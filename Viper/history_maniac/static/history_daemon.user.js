@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        history daemon static
 // @namespace   Violentmonkey Scripts
-// @match       https://www.webnovel.com/book/*
+// @match       *://*/*
 // @grant       GM_xmlhttpRequest
 // @version     1.0
 // @author      -
@@ -22,7 +22,7 @@ const register_listener = () => {
         ontimeout: () => {alert("history server couldn't be reached!")},
         onload: function (response) {
           if (response.status > 400) {
-            alert('history server: ', response.statusText, response.responseText)
+            alert('history server: '+ response.statusText)
           }
   
           console.log(response.responseText);
