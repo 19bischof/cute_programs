@@ -34,12 +34,37 @@ dictionary = load_dictionary()
 @app.get("/lookup/{word}")
 async def lookup_word(word: str):
     """Lookup a word in the dictionary."""
-    definition = dictionary.get(word)
-    if definition:
-        return JSONResponse(content={word: definition})
-    else:
-        raise HTTPException(status_code=404, detail="Word not found")
+    for base in get_base_forms(word):
+        definition = dictionary.get(base)
+        if definition:
+            return JSONResponse(content={word: definition})
+    raise HTTPException(status_code=404, detail="Word not found")
 
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the Dictionary API! Use /lookup/{word} to get definitions."}
+
+def get_base_forms(word):
+    """
+    Returns a generator that yields the possible base forms of a given word.
+    
+    Args:
+        word (str): The input word.
+        
+    Yields:
+        str: The possible base forms of the word.
+    """
+    # Yield the original word
+    yield word
+    
+    # Remove any trailing 's', 'es', 'd', 'ed', or 'ing'
+    if word.endswith('s'):
+        yield word[:-1]
+    if word.endswith('es'):
+        yield word[:-2]
+    if word.endswith('d'):
+        yield word[:-1]
+    if word.endswith('ed'):
+        yield word[:-2]
+    if word.endswith('ing'):
+        yield word[:-3]
