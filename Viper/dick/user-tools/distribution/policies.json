@@ -1,0 +1,11 @@
+
+{
+    "policies": {
+      "Extensions": {
+        "Install": [
+          "file:///C:/Users/<< path >>/cute_programs/Viper/dick/user-tools/lookup"
+        ]
+      }
+    }
+  }
+  
