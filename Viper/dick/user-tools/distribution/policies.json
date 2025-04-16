@@ -1,11 +1,10 @@
-
 {
-    "policies": {
-      "Extensions": {
-        "Install": [
-          "file:///C:/Users/<< path >>/cute_programs/Viper/dick/user-tools/lookup"
-        ]
+  "policies": {
+    "ExtensionSettings": {
+      "lookup@dictionary.com": {
+        "installation_mode": "force_installed",
+        "install_url": "file:///C:/Users/<path>/cute_programs/Viper/dick/user-tools/lookup/extension.xpi"
       }
     }
   }
-  
+}
