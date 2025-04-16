@@ -36,7 +36,7 @@
     let parts = text.split(" -- ");
     let output = parts[0];
     for (let i = 1; i < parts.length; i++) {
-      output += "<br><i> -- " + parts[i] + " </i>";
+      output += "<br><i style=\"all: unset; font-style:italic; display:inline-block; margin: 5px 0;\"> -- " + parts[i] + " </i>";
     }
     return output;
   }
@@ -55,6 +55,9 @@
     const container = document.createElement("div");
     container.style.maxHeight = "200px";
     container.style.overflowY = "auto";
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.gap = '20px';
 
     popup.innerHTML = "";
 
@@ -62,6 +65,7 @@
       const trimmed = part.trim();
       if (trimmed !== "") {
         const p = document.createElement("p");
+        p.style.all = 'unset';
         p.innerHTML = postRender(trimmed);
         container.appendChild(p);
       }

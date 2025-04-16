@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Dictionary Lookup Extension",
-  "version": "1.7",
+  "version": "1.15",
   "description": "Lookup definitions with a popup on double click.",
   "applications": {
     "gecko": {
