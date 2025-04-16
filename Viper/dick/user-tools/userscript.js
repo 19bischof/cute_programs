@@ -34,6 +34,14 @@
 
   function showPopup(definition, x, y) {
     const parts = definition.split(/\n\n|(?=\d+\.\s)/);
+    const pureParts = [];
+    parts.forEach(part => {
+      if (/\d+\.*\s*$/.test(part)) { // begins -> 1 Sam. iii. 12.\n\n ( prevents 1\n2.\n \n)
+        pureParts[pureParts.length - 1] += part;
+        return;
+      }
+      pureParts.push(part);
+    });
 
     const container = document.createElement("div");
     container.style.maxHeight = "200px";
@@ -41,7 +49,7 @@
 
     popup.innerHTML = "";
 
-    parts.forEach((part) => {
+    pureParts.forEach((part) => {
       const trimmed = part.trim();
       if (trimmed !== "") {
         const p = document.createElement("p");
