@@ -32,6 +32,15 @@
     return popup;
   }
 
+  function postRender(text) {
+    let parts = text.split(" -- ");
+    let output = parts[0];
+    for (let i = 1; i < parts.length; i++) {
+      output += "<br><i> -- " + parts[i] + " </i>";
+    }
+    return output;
+  }
+
   function showPopup(definition, x, y) {
     const parts = definition.split(/\n\n|(?=\d+\.\s)/);
     const pureParts = [];
@@ -53,7 +62,7 @@
       const trimmed = part.trim();
       if (trimmed !== "") {
         const p = document.createElement("p");
-        p.textContent = trimmed;
+        p.innerHTML = postRender(trimmed);
         container.appendChild(p);
       }
     });
