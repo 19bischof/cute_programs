@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Dictionary Lookup Extension",
-  "version": "1.15",
+  "version": "1.23",
   "description": "Lookup definitions with a popup on double click.",
   "applications": {
     "gecko": {
@@ -9,8 +9,15 @@
     }
   },
   "permissions": [
-    "<all_urls>"
+    "<all_urls>",
+    "storage"
   ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": true
+  },
   "content_scripts": [
     {
       "matches": [
@@ -21,6 +28,9 @@
       ],
       "run_at": "document_end"
     }
+  ],
+  "web_accessible_resources": [
+    "dictionary.json"
   ],
   "content_security_policy": "script-src 'self'; object-src 'self'"
 }

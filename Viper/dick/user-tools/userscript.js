@@ -11,7 +11,6 @@
 (async function () {
   "use strict";
 
-  const API_URL = "http://127.0.0.1:8000/lookup/";
   const popup = createPopup();
 
   function createPopup() {
@@ -82,24 +81,17 @@
   }
 
   async function doubleClickListener(event) {
-    const selectedText = window.getSelection().toString().trim().toLowerCase();
-    if (selectedText) {
-      let definition;
-      try {
-        const response = await fetch(API_URL + selectedText);
-        if (!response.ok) {
-          definition = "Definition not found";
-        } else {
-          const data = await response.json();
-          definition = data[selectedText] || "Definition not found.";
-        }
-      } catch (error) {
-        definition = "Error ;-0";
-      }
-      // Show the popup at the mouse position
-      showPopup(definition, event.pageX, event.pageY);
-    }
+  const selectedText = window.getSelection().toString().trim().toLowerCase();
+  if (selectedText) {
+    browser.runtime.sendMessage({ action: "lookup", word: selectedText })
+      .then(response => {
+        showPopup(response.definition, event.pageX, event.pageY);
+      })
+      .catch(error => {
+        showPopup("Error :-(", event.pageX, event.pageY);
+      });
   }
+}
 
   function singleClickListener(event) {
     if (!popup.contains(event.target)) {

@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 # Load the dictionary from the JSON file
-DICTIONARY_FILE = 'dictionary.json'
+DICTIONARY_FILE = '../dictionary.json'
 
 def load_dictionary():
     if not os.path.exists(DICTIONARY_FILE):
