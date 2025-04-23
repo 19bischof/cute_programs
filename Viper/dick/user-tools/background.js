@@ -1,11 +1,10 @@
 function getBaseForms(word) {
+  const endings = ['s','es','d','ed','ing','ment'];
   const forms = [word];
 
-  if (word.endsWith('s')) forms.push(word.slice(0, -1));
-  if (word.endsWith('es')) forms.push(word.slice(0, -2));
-  if (word.endsWith('d')) forms.push(word.slice(0, -1));
-  if (word.endsWith('ed')) forms.push(word.slice(0, -2));
-  if (word.endsWith('ing')) forms.push(word.slice(0, -3));
+  endings.forEach(ending =>
+    word.endsWith(ending) && forms.push(word.slice(0, -1 * ending.length))
+  );
 
   return forms;
 }
