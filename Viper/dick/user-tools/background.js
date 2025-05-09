@@ -1,11 +1,18 @@
 function getBaseForms(word) {
-  const endings = ["s", "es", "d", "ed", "ing", "ment", "ness"];
+  const endings = ["s", "es", "d", "ed", "ing", "ment", "ness", /.ed/];
   const forms = [word];
 
-  endings.forEach(
-    (ending) =>
-      word.endsWith(ending) && forms.push(word.slice(0, -1 * ending.length))
-  );
+  endings.forEach((ending) => {
+    if (ending instanceof RegExp) {
+      if (new RegExp(ending.source + "$").test(word)) {
+        forms.push(word.slice(0, -1 * ending.source.length));
+      }
+      return;
+    }
+    if (word.endsWith(ending)) {
+      forms.push(word.slice(0, -1 * ending.length));
+    }
+  });
 
   return forms;
 }
