@@ -1,12 +1,10 @@
 {
   "manifest_version": 2,
-  "name": "Dictionary Lookup Extension",
-  "version": "1.25",
-  "description": "Lookup definitions with a popup on double click.",
-  "applications": {
-    "gecko": {
-      "id": "lookup@dictionary.com"
-    }
+  "name": "Quick dic",
+  "version": "1.41",
+  "description": "Speedy dictionary lookup with a nice popup on double click",
+  "icons": {
+    "96": "icons/x96.png"
   },
   "permissions": [
     "<all_urls>",
