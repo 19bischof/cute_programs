@@ -1,5 +1,5 @@
 function getBaseForms(word) {
-  const endings = ["s", "es", "d", "ed", "ing", "ment", "ness", /.ed/];
+  const endings = ["s", "es", "d", "ed", "ing", "ment", "ness", /.ed/, /.ing/];
   const forms = [word];
 
   endings.forEach((ending) => {
