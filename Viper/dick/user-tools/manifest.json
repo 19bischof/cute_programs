@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
   "name": "Quick dic",
-  "version": "1.49",
+  "version": "1.52",
   "description": "Speedy dictionary lookup with a nice popup on double click",
   "icons": {
-    "48": "icons/x48.png",
-    "96": "icons/x96.png",
-    "128": "icons/x128.png"
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
   },
   "applications": {
     "gecko": {
