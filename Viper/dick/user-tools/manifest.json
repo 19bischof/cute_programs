@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Quick dic",
-  "version": "1.46",
+  "version": "1.49",
   "description": "Speedy dictionary lookup with a nice popup on double click",
   "icons": {
     "48": "icons/x48.png",
@@ -10,7 +10,7 @@
   },
   "applications": {
     "gecko": {
-      "id": "lookup@dictionary.com"
+      "id": "{d52621cf-4a11-4e55-90c4-99ab478a2ff9}"
     }
   },
   "permissions": [
