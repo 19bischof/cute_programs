@@ -46,7 +46,11 @@
   function showPopup(definition, x, y) {
     const parts = definition.split(/\n\n|(?=\d+\.\s)/);
     const pureParts = [];
-    parts.forEach((part) => {
+    parts.forEach((part, i) => {
+      if (i == 0){
+        pureParts.push(part)
+        return
+      }
       if (/\d+\.*\s*$/.test(part)) {
         // begins -> 1 Sam. iii. 12.\n\n ( prevents 1\n2.\n \n)
         pureParts[pureParts.length - 1] += part;
