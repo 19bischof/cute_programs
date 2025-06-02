@@ -1,11 +1,14 @@
-function getBaseForms(word) {
-  const endings = ["s", "es", "d", "ed", "ing", "ment", "ness", /.ed/, /.ing/];
+browser.storage.local.remove("data");
+
+function _getBaseForms(word, endings) {
   const forms = [word];
 
   endings.forEach((ending) => {
     if (ending instanceof RegExp) {
       if (new RegExp(ending.source + "$").test(word)) {
-        forms.push(word.slice(0, -1 * ending.source.length));
+        forms.push(
+          word.slice(0, -1 * ending.source.replaceAll("?", "").length)
+        );
       }
       return;
     }
@@ -13,54 +16,121 @@ function getBaseForms(word) {
       forms.push(word.slice(0, -1 * ending.length));
     }
   });
-
   return forms;
 }
+function getEnglishBaseForms(word) {
+  const endings = [
+    "s",
+    "es",
+    "d",
+    "ed",
+    "ing",
+    "ment",
+    "ness",
+    "ly",
+    /.ed/,
+    /.ing/,
+  ];
 
-let dictionary = {};
+  return _getBaseForms(word, endings);
+}
 
-async function loadDictionary() {
-  let { data } = await browser.storage.local.get("data");
+function getFrenchBaseForms(word) {
+  const frenchEndings = [
+    // Low-impact inflections
+    "s", // plural
+    "es", // feminine plural
+    "e", // feminine
+    "ée", // past participle (feminine)
+    "ées", // past participle (fem. plural)
+    "é", // past participle (masculine)
+    "és", // past participle (masc. plural)
+
+    // Participles
+    "ant", // present participle (e.g. mangeant → manger)
+    "ante", // feminine form
+    "ants", // plural
+    "antes", // feminine plural
+
+    // Nominalizations
+    "ment", // from verbs (e.g. jugement → juger)
+    "ement", // e.g. avancement → avancer
+    "issement", // e.g. établissement → établir
+
+    // Abstract/derived noun forms
+    "tion", // e.g. réalisation → réaliser
+    "ations", // plural
+    "éité", // e.g. humanité
+
+    // Regex fallbacks
+    /.é.e?s?/, // catch-all for participle/adj endings
+    /.ant.e?s?/, // participle/adj variants
+  ];
+
+  return _getBaseForms(word, frenchEndings);
+}
+
+async function loadDictionary(key, url) {
+  let { [key]: data } = await browser.storage.local.get(key);
 
   if (!data) {
-    const response = await fetch(
-      "https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/refs/heads/master/dictionary.json"
-    );
+    const response = await fetch(url);
     if (!response.ok) {
-      console.error("failed to fetch dictionary :(");
+      console.error(`failed to fetch dictionary ${key} :(`);
       return;
     }
 
     data = await response.json();
 
     await browser.storage.local.set({
-      data,
+      [key]: data,
     });
 
-    console.log("dictionary file downloaded and stored");
+    console.log(`dictionary file ${key} downloaded and stored`);
   }
 
-  dictionary = data;
-  console.log("dictionary loaded into memory :-)");
-}
+  console.log(`dictionary ${key} loaded into memory :-)`);
 
-loadDictionary();
+  return data;
+}
+let en_webster,
+  fr_vicon = [{}, {}];
+
+(async () => {
+  en_webster = await loadDictionary(
+    "en_webster",
+    "https://raw.githubusercontent.com/matthewreagan/WebstersEnglishDictionary/refs/heads/master/dictionary.json"
+  );
+  fr_vicon = await loadDictionary(
+    "fr_Vicon",
+    "https://raw.githubusercontent.com/19bischof/dictionaries/refs/heads/main/Vicon%20French-English%20Dictionary.json"
+  );
+})();
 
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "lookup") {
     const word = message.word.toLowerCase();
     console.log("looking up:", word);
-    const candidates = getBaseForms(word);
     let definition = "Definition not found.";
 
-    for (const candidate of candidates) {
-      if (dictionary[candidate]) {
+    const en_candidates = getEnglishBaseForms(word);
+    for (const candidate of en_candidates) {
+      if (en_webster[candidate]) {
         console.log("found definition for:", candidate);
-        definition = dictionary[candidate];
+        definition = en_webster[candidate];
         break;
       }
     }
 
+
+    const fr_canditates = getFrenchBaseForms(word);
+    for (const candidate of fr_canditates) {
+      if (fr_vicon[candidate]) {
+        console.log("found definition for:", candidate);
+        definition = fr_vicon[candidate];
+        break;
+      }
+    }
     sendResponse({ definition });
   }
 });
